@@ -1,0 +1,21 @@
+{
+	"name": "LOSTCAUSE.DEV",
+	"short_name": "LOSTCAUSE",
+	"description": "A not-so-serious coding publication about open source, CLI tools, programming languages, and fun projects.",
+	"start_url": "/",
+	"display": "standalone",
+	"theme_color": "#f9f7f2",
+	"background_color": "#f9f7f2",
+	"icons": [
+		{
+			"src": "/android-chrome-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "/android-chrome-512x512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		}
+	]
+}
