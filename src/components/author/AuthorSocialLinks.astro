@@ -1,0 +1,31 @@
+---
+import SocialIcon from './SocialIcon.astro';
+import { getAuthorSocialLinks } from '../../lib/social';
+import type { Author } from '../../lib/authors';
+
+interface Props {
+	author: Author;
+}
+
+const { author } = Astro.props;
+const links = getAuthorSocialLinks(author.data);
+---
+
+{
+	links.length > 0 && (
+		<nav class="author-social" aria-label={`${author.data.name} social links`}>
+			{links.map((link) => (
+				<a
+					class="author-social__link"
+					href={link.url}
+					target="_blank"
+					rel={link.showReferral ? 'noopener': 'noopener noreferrer'}
+					aria-label={link.label}
+					title={link.label}
+				>
+					<SocialIcon platform={link.key} />
+				</a>
+			))}
+		</nav>
+	)
+}

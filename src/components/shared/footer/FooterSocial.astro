@@ -1,0 +1,26 @@
+---
+import SocialIcon from '../../author/SocialIcon.astro';
+import { SOCIAL_LINKS } from '../../../lib/site';
+---
+
+<div class="footer-column footer-column--social">
+	<h2 class="footer-column__title">Follow LostCause</h2>
+	<ul class="footer-social">
+		{
+			SOCIAL_LINKS.map((link) => (
+				<li>
+					<a
+						class="footer-social__link"
+						href={link.href}
+						target="_blank"
+						rel="noopener noreferrer"
+						aria-label={link.label}
+					>
+						<SocialIcon platform={link.platform} />
+						<span>{link.label}</span>
+					</a>
+				</li>
+			))
+		}
+	</ul>
+</div>

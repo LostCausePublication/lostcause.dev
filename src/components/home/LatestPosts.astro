@@ -1,0 +1,29 @@
+---
+import PostCard from '../blog/PostCard.astro';
+import { getPublishedPosts } from '../../lib/blog';
+
+const posts = await getPublishedPosts();
+const latestPosts = posts.slice(0, 3);
+---
+
+{
+	latestPosts.length > 0 && (
+		<section class="latest-posts" aria-labelledby="latest-posts-heading">
+			<div class="latest-posts__header">
+				<h2 id="latest-posts-heading" class="latest-posts__title">
+					Latest posts
+				</h2>
+				<a class="latest-posts__link" href="/blog">
+					View all
+				</a>
+			</div>
+			<ul class="latest-posts__list">
+				{latestPosts.map((post) => (
+					<li>
+						<PostCard post={post} />
+					</li>
+				))}
+			</ul>
+		</section>
+	)
+}

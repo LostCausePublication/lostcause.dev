@@ -1,14 +1,5 @@
 @use 'variables' as *;
 
-.page {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: space-between;
-	min-height: 100%;
-	padding: 3rem 1.5rem 2rem;
-}
-
 .hero {
 	display: flex;
 	flex: 1;
@@ -102,20 +93,43 @@
 	}
 }
 
-.footer {
+.latest-posts {
+	width: 100%;
+	max-width: 52rem;
 	margin-top: 3rem;
-	text-align: center;
+	text-align: left;
+}
+
+.latest-posts__header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 0.75rem;
+	margin-bottom: 1.25rem;
+}
+
+.latest-posts__title {
+	font-family: $font-sans;
+	font-size: 1.5rem;
+	font-weight: 800;
+}
+
+.latest-posts__link {
+	color: $color-accent;
+	font-family: $font-mono;
 	font-size: 0.875rem;
-	font-weight: 500;
-	line-height: 1.6;
+	text-decoration: none;
 
-	a {
-		color: $color-accent;
-		text-decoration: none;
-
-		&:hover,
-		&:focus-visible {
-			text-decoration: underline;
-		}
+	&:hover,
+	&:focus-visible {
+		text-decoration: underline;
 	}
+}
+
+.latest-posts__list {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	list-style: none;
 }

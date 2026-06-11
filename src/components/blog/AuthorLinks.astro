@@ -1,0 +1,24 @@
+---
+import { getAuthorsBySlugs, getAuthorSlug } from '../../lib/authors';
+
+interface Props {
+	authorSlugs: string[];
+}
+
+const { authorSlugs } = Astro.props;
+const authors = await getAuthorsBySlugs(authorSlugs);
+---
+
+<div class="author-links">
+	<span class="author-links__label">by</span>
+	{
+		authors.map((author, index) => (
+			<span class="author-links__item">
+				{index > 0 && <span class="author-links__separator">, </span>}
+				<a class="author-links__name" href={`/authors/${getAuthorSlug(author)}`}>
+					{author.data.name}
+				</a>
+			</span>
+		))
+	}
+</div>

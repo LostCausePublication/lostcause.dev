@@ -12,7 +12,11 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/mdx": "^6.0.3",
     "astro": "^6.4.4",
-    "sass": "^1.100.0"
+    "astro-expressive-code": "^0.43.1",
+    "sass": "^1.100.0",
+    "sharp": "^0.35.0",
+    "unist-util-visit": "^5.1.0"
   }
 }

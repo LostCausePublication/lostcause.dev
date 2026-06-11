@@ -1,0 +1,49 @@
+---
+import PageLayout from '../../../components/layout/PageLayout.astro';
+import PostCard from '../../../components/blog/PostCard.astro';
+import { getCategoryStats, getPostsByCategory } from '../../../lib/categories';
+export async function getStaticPaths() {
+	const categories = await getCategoryStats();
+
+	return categories.map((category) => ({
+		params: { slug: category.slug },
+		props: { category },
+	}));
+}
+
+const { category } = Astro.props;
+const posts = await getPostsByCategory(category.slug);
+---
+
+<PageLayout
+	seo={{
+		title: category.name,
+		description: `All posts in the ${category.name} category on Lost Cause Publication.`,
+		canonicalPath: `/blog/category/${category.slug}`,
+	}}
+	breadcrumbs={[
+		{ label: 'Blog', href: '/blog' },
+		{ label: category.name },
+	]}
+>
+	<section class="page-section">
+		<h1 class="page-section__title">{category.name}</h1>
+		<p class="page-section__description">
+			{category.count} {category.count === 1 ? 'post' : 'posts'} in this category.
+		</p>
+
+		{
+			posts.length > 0 ? (
+				<ul class="post-list">
+					{posts.map((post) => (
+						<li>
+							<PostCard post={post} />
+						</li>
+					))}
+				</ul>
+			) : (
+				<p>No posts in this category yet.</p>
+			)
+		}
+	</section>
+</PageLayout>
