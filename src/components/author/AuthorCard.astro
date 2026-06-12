@@ -1,0 +1,22 @@
+---
+import AuthorAvatar from './AuthorAvatar.astro';
+import type { Author } from '../../lib/authors';
+import { getAuthorSlug } from '../../lib/authors';
+
+interface Props {
+	author: Author;
+}
+
+const { author } = Astro.props;
+const slug = getAuthorSlug(author);
+---
+
+<article class="author-card">
+	<div class="author-card__header">
+		<AuthorAvatar filename={author.data.avatar} name={author.data.name} size="sm" rounded={true} />
+		<h2 class="author-card__name">
+			<a href={`/authors/${slug}`}>{author.data.name}</a>
+		</h2>
+	</div>
+	<p class="author-card__bio">{author.data.bio}</p>
+</article>

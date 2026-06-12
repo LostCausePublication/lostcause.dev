@@ -1,0 +1,164 @@
+@use 'variables' as *;
+
+.author-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	list-style: none;
+}
+
+.author-avatar {
+	flex-shrink: 0;
+	object-fit: cover;
+}
+
+.author-avatar--rounded {
+	border-radius: 50%;
+}
+
+.author-avatar--sm {
+	width: 3rem;
+	height: 3rem;
+}
+
+.author-avatar--md {
+	width: 4.5rem;
+	height: 4.5rem;
+}
+
+.author-avatar--lg {
+	width: 7.5rem;
+	height: 7.5rem;
+}
+
+.author-bio {
+	display: flex;
+	align-items: flex-start;
+	gap: 1.25rem;
+}
+
+@media (max-width: 399px) {
+	.author-bio {
+		flex-direction: column;
+		gap: 1rem;
+	}
+}
+
+.author-bio__content {
+	flex: 1;
+	min-width: 0;
+}
+
+.author-bio__name {
+	font-family: $font-sans;
+	font-size: clamp(1.5rem, 4vw, 2.5rem);
+	font-weight: 800;
+	line-height: 1.15;
+
+	a {
+		color: $color-primary;
+		text-decoration: none;
+
+		&:hover,
+		&:focus-visible {
+			color: $color-accent;
+		}
+	}
+}
+
+.author-bio__text {
+	margin-top: 0.5rem;
+	max-width: 40rem;
+	font-size: 1.0625rem;
+	line-height: 1.6;
+}
+
+.author-card {
+	padding: 1.25rem;
+	border: 1px solid rgba($color-primary, 0.15);
+	background-color: $color-white;
+}
+
+.author-card__header {
+	display: flex;
+	align-items: center;
+	gap: 0.875rem;
+}
+
+.author-card__name {
+	font-family: $font-sans;
+	font-size: 1.25rem;
+	font-weight: 800;
+
+	a {
+		color: $color-primary;
+		text-decoration: none;
+
+		&:hover,
+		&:focus-visible {
+			color: $color-accent;
+		}
+	}
+}
+
+.author-card__bio {
+	margin-top: 0.5rem;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+}
+
+.author-header {
+	margin-bottom: 2rem;
+}
+
+.author-social {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	margin-top: 0.875rem;
+}
+
+.author-social__link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: $color-primary;
+	text-decoration: none;
+	transition: color 0.15s ease;
+
+	&:hover,
+	&:focus-visible {
+		color: $color-accent;
+	}
+}
+
+.author-posts {
+	margin-top: 2rem;
+}
+
+.author-posts__title {
+	margin-bottom: 1rem;
+	font-family: $font-sans;
+	font-size: 1.25rem;
+	font-weight: 800;
+}
+
+.post-authors {
+	margin-top: 2.5rem;
+}
+
+.post-authors__divider {
+	margin-bottom: 2rem;
+	border: 0;
+	border-top: 1px solid rgba($color-primary, 0.15);
+}
+
+.post-authors .author-bio + .author-bio {
+	margin-top: 1.5rem;
+	padding-top: 1.5rem;
+	border-top: 1px solid rgba($color-primary, 0.1);
+}
+
+.post-authors .author-bio__name {
+	font-size: 1.25rem;
+}

@@ -1,0 +1,25 @@
+---
+import { NAV_LINKS } from '../../../lib/site';
+
+const currentPath = Astro.url.pathname;
+---
+
+<div class="footer-column footer-column--nav">
+	<h2 class="footer-column__title">Pages</h2>
+	<ul class="footer-nav">
+		{
+			NAV_LINKS.map(({ href, label }) => {
+				const isActive =
+					href === '/' ? currentPath === '/' : currentPath === href || currentPath.startsWith(`${href}/`);
+
+				return (
+					<li>
+						<a class:list={['footer-nav__link', isActive && 'footer-nav__link--active']} href={href}>
+							{label}
+						</a>
+					</li>
+				);
+			})
+		}
+	</ul>
+</div>

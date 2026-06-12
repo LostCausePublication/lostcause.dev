@@ -1,0 +1,22 @@
+---
+import avatar from '../../assets/avatar.png';
+import SocialLinks from './SocialLinks.astro';
+import { SITE } from '../../lib/site';
+---
+
+<div class="hero">
+	<img class="avatar" src={avatar.src} width={avatar.width} height={avatar.height} alt="" />
+
+	<h1 class="title">
+		<span class="title-primary">LOSTCAUSE.</span><span class="title-accent">DEV</span>
+	</h1>
+
+	<p class="subtitle">{SITE.tagline}</p>
+
+	<p class="description">
+		A not-so-serious <span class="description-highlight">coding publication</span> about open source, CLI tools,
+		programming languages, and fun projects.
+	</p>
+
+	<SocialLinks />
+</div>

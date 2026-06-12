@@ -1,0 +1,47 @@
+---
+import PageLayout from '../../components/layout/PageLayout.astro';
+import AuthorHeader from '../../components/author/AuthorHeader.astro';
+import PostCard from '../../components/blog/PostCard.astro';
+import { getAllAuthors, getAuthorSlug } from '../../lib/authors';
+import { getPostsByAuthor } from '../../lib/blog';
+
+export async function getStaticPaths() {
+	const authors = await getAllAuthors();
+
+	return authors.map((author) => ({
+		params: { slug: getAuthorSlug(author) },
+		props: { author },
+	}));
+}
+
+const { author } = Astro.props;
+const slug = getAuthorSlug(author);
+const posts = await getPostsByAuthor(slug);
+---
+
+<PageLayout
+	seo={{
+		title: author.data.name,
+		description: author.data.bio,
+		canonicalPath: `/authors/${slug}`,
+	}}
+>
+	<AuthorHeader author={author} />
+
+	<section class="author-posts">
+		<h2 class="author-posts__title">Posts by {author.data.name}</h2>
+		{
+			posts.length > 0 ? (
+				<ul class="post-list">
+					{posts.map((post) => (
+						<li>
+							<PostCard post={post} />
+						</li>
+					))}
+				</ul>
+			) : (
+				<p>No published posts yet.</p>
+			)
+		}
+	</section>
+</PageLayout>

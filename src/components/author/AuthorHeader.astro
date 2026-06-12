@@ -1,0 +1,14 @@
+---
+import AuthorBio from './AuthorBio.astro';
+import type { Author } from '../../lib/authors';
+
+interface Props {
+	author: Author;
+}
+
+const { author } = Astro.props;
+---
+
+<header class="author-header">
+	<AuthorBio author={author} heading="h1" avatarSize="lg" />
+</header>

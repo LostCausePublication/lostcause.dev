@@ -1,0 +1,22 @@
+---
+import avatar from '../../assets/avatar.png';
+
+interface Props {
+	href?: string;
+}
+
+const { href = '/' } = Astro.props;
+---
+
+<a class="logo" href={href}>
+	<img
+		class="logo__avatar"
+		src={avatar.src}
+		width={avatar.width}
+		height={avatar.height}
+		alt=""
+	/>
+	<span class="logo__text">
+		<span class="logo__primary">LOSTCAUSE.</span><span class="logo__accent">DEV</span>
+	</span>
+</a>

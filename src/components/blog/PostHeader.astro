@@ -1,0 +1,31 @@
+---
+import PostMeta from './PostMeta.astro';
+import CategoryList from './CategoryList.astro';
+import type { BlogPost } from '../../lib/blog';
+
+interface Props {
+	post: BlogPost;
+}
+
+const { post } = Astro.props;
+---
+
+<header class="post-header">
+	<CategoryList categories={post.data.categories} />
+	<h1 class="post-header__title">{post.data.title}</h1>
+	<p class="post-header__description">{post.data.description}</p>
+	<PostMeta post={post} />
+	{
+		post.data.updatedDate && (
+			<p class="post-header__updated">
+				Updated <time datetime={post.data.updatedDate.toISOString()}>
+					{post.data.updatedDate.toLocaleDateString('en-US', {
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric',
+					})}
+				</time>
+			</p>
+		)
+	}
+</header>

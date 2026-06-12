@@ -1,0 +1,50 @@
+@use 'variables' as *;
+
+.blog-categories {
+	margin-bottom: 2rem;
+}
+
+.blog-categories__title {
+	margin-bottom: 0.75rem;
+	font-family: $font-sans;
+	font-size: 0.875rem;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+}
+
+.blog-categories__list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	list-style: none;
+}
+
+.blog-categories__link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.35rem 0.625rem;
+	border: 1px solid $color-primary;
+	color: $color-primary;
+	font-family: $font-mono;
+	font-size: 0.75rem;
+	letter-spacing: 0.06em;
+	text-decoration: none;
+	text-transform: uppercase;
+	transition:
+		color 0.15s ease,
+		border-color 0.15s ease;
+
+	&:hover,
+	&:focus-visible {
+		border-color: $color-accent;
+		color: $color-accent;
+	}
+}
+
+.blog-categories__count {
+	padding: 0.1rem 0.35rem;
+	background-color: rgba($color-primary, 0.08);
+	font-size: 0.6875rem;
+}

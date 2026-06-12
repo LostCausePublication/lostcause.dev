@@ -1,0 +1,19 @@
+---
+import CategoryBadge from './CategoryBadge.astro';
+
+interface Props {
+	categories: string[];
+}
+
+const { categories } = Astro.props;
+---
+
+<ul class="category-list" aria-label="Categories">
+	{
+		categories.map((category) => (
+			<li>
+				<CategoryBadge category={category} />
+			</li>
+		))
+	}
+</ul>

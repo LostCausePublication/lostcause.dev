@@ -1,0 +1,18 @@
+---
+import AuthorLinks from './AuthorLinks.astro';
+import type { BlogPost } from '../../lib/blog';
+import { formatDate } from '../../lib/blog';
+
+interface Props {
+	post: BlogPost;
+}
+
+const { post } = Astro.props;
+---
+
+<div class="post-meta">
+	<time class="post-meta__date" datetime={post.data.pubDate.toISOString()}>
+		{formatDate(post.data.pubDate)}
+	</time>
+	<AuthorLinks authorSlugs={post.data.authors} />
+</div>

@@ -1,0 +1,61 @@
+@use 'variables' as *;
+
+.site-nav {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem 1.25rem;
+}
+
+.site-nav__link {
+	padding: 0.25rem 0.5rem;
+	color: $color-primary;
+	font-family: $font-mono;
+	font-size: 0.875rem;
+	text-decoration: none;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	transition: color 0.15s ease;
+
+	&:hover,
+	&:focus-visible {
+		color: $color-accent;
+	}
+
+	&--active {
+		border-bottom: 2px solid $color-accent;
+		color: $color-accent;
+	}
+}
+
+.logo {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.625rem;
+	text-decoration: none;
+}
+
+.logo__avatar {
+	flex-shrink: 0;
+	width: 2rem;
+	height: 2rem;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.logo__text {
+	font-family: $font-sans;
+	font-size: clamp(1.25rem, 4vw, 1.75rem);
+	font-weight: 800;
+	line-height: 1;
+	letter-spacing: -0.02em;
+}
+
+.logo__primary {
+	color: $color-primary;
+}
+
+.logo__accent {
+	color: $color-accent;
+}

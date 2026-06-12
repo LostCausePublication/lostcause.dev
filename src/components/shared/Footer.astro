@@ -1,0 +1,24 @@
+---
+import FooterLunaFinder from './footer/FooterLunaFinder.astro';
+import FooterSiteLinks from './footer/FooterSiteLinks.astro';
+import FooterSocial from './footer/FooterSocial.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+	<div class="footer__inner">
+		<div class="footer__grid">
+			<FooterLunaFinder />
+			<FooterSiteLinks />
+			<FooterSocial />
+		</div>
+		<div class="footer__bottom">
+			<p>&copy; {year} Lost Cause Publication</p>
+			<p>
+				Made with ❤️ by
+				<a href="https://razvanmuntian.com" target="_blank" rel="noopener">Razvan Muntian</a>
+			</p>
+		</div>
+	</div>
+</footer>

@@ -1,0 +1,31 @@
+---
+export type TocHeading = {
+	depth: number;
+	slug: string;
+	text: string;
+};
+
+interface Props {
+	headings: TocHeading[];
+}
+
+const { headings } = Astro.props;
+const tocHeadings = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3);
+---
+
+{
+	tocHeadings.length > 0 && (
+		<nav class="toc" aria-label="Table of contents">
+			<h2 class="toc__title">On this page</h2>
+			<ol class="toc__list">
+				{tocHeadings.map((heading) => (
+					<li class:list={['toc__item', `toc__item--depth-${heading.depth}`]}>
+						<a class="toc__link" href={`#${heading.slug}`}>
+							{heading.text}
+						</a>
+					</li>
+				))}
+			</ol>
+		</nav>
+	)
+}
