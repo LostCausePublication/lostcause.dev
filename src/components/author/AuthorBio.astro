@@ -1,0 +1,35 @@
+---
+import AuthorAvatar from './AuthorAvatar.astro';
+import AuthorSocialLinks from './AuthorSocialLinks.astro';
+import type { Author } from '../../lib/authors';
+import { getAuthorSlug } from '../../lib/authors';
+
+interface Props {
+	author: Author;
+	heading?: 'h1' | 'h2' | 'h3';
+	linkToProfile?: boolean;
+	avatarSize?: 'sm' | 'md' | 'lg';
+}
+
+const { author, heading = 'h2', linkToProfile = false, avatarSize = 'lg' } = Astro.props;
+const { name, bio, avatar } = author.data;
+const slug = getAuthorSlug(author);
+const HeadingTag = heading;
+---
+
+<div class="author-bio">
+	<AuthorAvatar filename={avatar} name={name} size={avatarSize} rounded={true} />
+	<div class="author-bio__content">
+		{
+			linkToProfile ? (
+				<HeadingTag class="author-bio__name">
+					<a href={`/authors/${slug}`}>{name}</a>
+				</HeadingTag>
+			) : (
+				<HeadingTag class="author-bio__name">{name}</HeadingTag>
+			)
+		}
+		<p class="author-bio__text">{bio}</p>
+		<AuthorSocialLinks author={author} />
+	</div>
+</div>

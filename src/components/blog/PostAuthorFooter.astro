@@ -1,0 +1,22 @@
+---
+import AuthorBio from '../author/AuthorBio.astro';
+import { getAuthorsBySlugs } from '../../lib/authors';
+
+interface Props {
+	authorSlugs: string[];
+}
+
+const { authorSlugs } = Astro.props;
+const authors = await getAuthorsBySlugs(authorSlugs);
+---
+
+{
+	authors.length > 0 && (
+		<footer class="post-authors">
+			<hr class="post-authors__divider" />
+			{authors.map((author) => (
+				<AuthorBio author={author} heading="h2" linkToProfile avatarSize="md" />
+			))}
+		</footer>
+	)
+}

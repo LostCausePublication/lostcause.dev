@@ -1,0 +1,32 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import SiteNav from '../shared/SiteNav.astro';
+import Logo from '../shared/Logo.astro';
+import Footer from '../shared/Footer.astro';
+import Breadcrumbs from '../shared/Breadcrumbs.astro';
+import type { BreadcrumbItem } from '../../lib/breadcrumbs';
+import type { SeoData } from '../../lib/seo';
+
+interface Props {
+	seo: SeoData;
+	centered?: boolean;
+	breadcrumbs?: BreadcrumbItem[];
+}
+
+const { seo, centered = false, breadcrumbs } = Astro.props;
+---
+
+<BaseLayout seo={seo}>
+	<main class:list={['page', centered && 'page--centered']}>
+		<header class="page-header">
+			<Logo />
+			<SiteNav />
+		</header>
+
+		<div class="page-content">
+			{breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
+			<slot />
+		</div>
+	</main>
+	<Footer />
+</BaseLayout>

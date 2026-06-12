@@ -1,0 +1,23 @@
+---
+import { getCategoryStats } from '../../lib/categories';
+
+const categories = await getCategoryStats();
+---
+
+{
+	categories.length > 0 && (
+		<nav class="blog-categories" aria-label="Blog categories">
+			<h2 class="blog-categories__title">Categories</h2>
+			<ul class="blog-categories__list">
+				{categories.map((category) => (
+					<li>
+						<a class="blog-categories__link" href={`/blog/category/${category.slug}`}>
+							{category.name}
+							<span class="blog-categories__count">{category.count}</span>
+						</a>
+					</li>
+				))}
+			</ul>
+		</nav>
+	)
+}

@@ -1,0 +1,56 @@
+---
+import PostLayout from '../../components/layout/PostLayout.astro';
+import PostHeader from '../../components/blog/PostHeader.astro';
+import PostAuthorFooter from '../../components/blog/PostAuthorFooter.astro';
+import { getCollection, render } from 'astro:content';
+import { getAuthorsBySlugs } from '../../lib/authors';
+import { getPostSlug } from '../../lib/blog';
+import { getCategorySlug } from '../../lib/categories';
+import { getPostOgImageUrl } from '../../lib/og-images';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog', ({ data }) => !data.draft);
+
+	return posts.map((post) => ({
+		params: { slug: getPostSlug(post) },
+		props: { post },
+	}));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const slug = getPostSlug(post);
+const authors = await getAuthorsBySlugs(post.data.authors);
+const primaryCategory = post.data.categories[0];
+const primaryCategorySlug = getCategorySlug(primaryCategory);
+const ogImageUrl = getPostOgImageUrl(post.data.ogImage);
+---
+
+<PostLayout
+	seo={{
+		title: post.data.title,
+		description: post.data.description,
+		canonicalPath: `/blog/${slug}`,
+		image: ogImageUrl,
+		imageAlt: post.data.ogImageAlt ?? post.data.title,
+		type: 'article',
+		publishedTime: post.data.pubDate,
+		modifiedTime: post.data.updatedDate,
+		authors: authors.map((author) => author.data.name),
+		categories: post.data.categories,
+	}}
+	headings={headings}
+	breadcrumbs={[
+		{ label: 'Blog', href: '/blog' },
+		{ label: primaryCategory, href: `/blog/category/${primaryCategorySlug}` },
+		{ label: post.data.title },
+	]}
+>
+	<article>
+		<PostHeader post={post} />
+		<div class="prose">
+			<Content />
+		</div>
+		<PostAuthorFooter authorSlugs={post.data.authors} />
+	</article>
+</PostLayout>

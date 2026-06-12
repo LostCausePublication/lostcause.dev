@@ -1,0 +1,78 @@
+@use 'variables' as *;
+
+.page--post {
+	.page-header--wide,
+	.post-layout {
+		max-width: 72rem;
+	}
+}
+
+.post-layout {
+	width: 100%;
+	flex: 1;
+}
+
+.post-layout--with-toc {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 14rem;
+	gap: 2.5rem;
+	align-items: start;
+}
+
+.post-layout__main {
+	min-width: 0;
+}
+
+.toc {
+	position: sticky;
+	top: 2rem;
+	padding: 1rem;
+	border: 1px solid rgba($color-primary, 0.15);
+	background-color: $color-white;
+}
+
+.toc__title {
+	margin-bottom: 0.75rem;
+	font-family: $font-sans;
+	font-size: 0.875rem;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+}
+
+.toc__list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.375rem;
+	list-style: none;
+	counter-reset: toc;
+}
+
+.toc__item--depth-3 {
+	padding-left: 0.75rem;
+}
+
+.toc__link {
+	display: block;
+	color: $color-primary;
+	font-size: 0.8125rem;
+	line-height: 1.4;
+	text-decoration: none;
+	transition: color 0.15s ease;
+
+	&:hover,
+	&:focus-visible {
+		color: $color-accent;
+	}
+}
+
+@media (max-width: 56rem) {
+	.post-layout--with-toc {
+		grid-template-columns: 1fr;
+	}
+
+	.toc {
+		position: static;
+		order: -1;
+	}
+}

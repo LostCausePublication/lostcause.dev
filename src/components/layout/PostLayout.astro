@@ -1,0 +1,39 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import SiteNav from '../shared/SiteNav.astro';
+import Logo from '../shared/Logo.astro';
+import Footer from '../shared/Footer.astro';
+import Breadcrumbs from '../shared/Breadcrumbs.astro';
+import TableOfContents from '../blog/TableOfContents.astro';
+import type { TocHeading } from '../blog/TableOfContents.astro';
+import type { BreadcrumbItem } from '../../lib/breadcrumbs';
+import type { SeoData } from '../../lib/seo';
+
+interface Props {
+	seo: SeoData;
+	headings?: TocHeading[];
+	breadcrumbs?: BreadcrumbItem[];
+}
+
+const { seo, headings = [], breadcrumbs } = Astro.props;
+const tocHeadings = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3);
+const hasToc = tocHeadings.length > 0;
+---
+
+<BaseLayout seo={seo}>
+	<main class:list={['page', 'page--post', hasToc && 'page--post-with-toc']}>
+		<header class="page-header page-header--wide">
+			<Logo />
+			<SiteNav />
+		</header>
+
+		<div class:list={['post-layout', hasToc && 'post-layout--with-toc']}>
+			<div class="post-layout__main">
+				{breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
+				<slot />
+			</div>
+			{hasToc && <TableOfContents headings={headings} />}
+		</div>
+	</main>
+	<Footer />
+</BaseLayout>

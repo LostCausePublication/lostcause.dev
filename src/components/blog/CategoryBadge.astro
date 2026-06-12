@@ -1,0 +1,21 @@
+---
+import { getCategorySlug } from '../../lib/categories';
+
+interface Props {
+	category: string;
+	linked?: boolean;
+}
+
+const { category, linked = true } = Astro.props;
+const slug = getCategorySlug(category);
+---
+
+{
+	linked ? (
+		<a class="category-badge" href={`/blog/category/${slug}`}>
+			{category}
+		</a>
+	) : (
+		<span class="category-badge">{category}</span>
+	)
+}

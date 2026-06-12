@@ -1,0 +1,26 @@
+---
+import { getAuthorAvatar } from '../../lib/avatars';
+
+interface Props {
+	filename?: string;
+	name: string;
+	class?: string;
+	size?: 'sm' | 'md' | 'lg';
+	rounded?: boolean;
+}
+
+const { filename, name, class: className, size = 'md', rounded = false } = Astro.props;
+const image = filename ? getAuthorAvatar(filename) : null;
+---
+
+{
+	image && (
+		<img
+			class:list={['author-avatar', `author-avatar--${size}`, rounded && 'author-avatar--rounded', className]}
+			src={image.src}
+			width={image.width}
+			height={image.height}
+			alt={`${name}'s avatar`}
+		/>
+	)
+}

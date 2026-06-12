@@ -1,0 +1,23 @@
+---
+import SeoHead from '../shared/SeoHead.astro';
+import Analytics from '../shared/Analytics.astro';
+import type { SeoData } from '../../lib/seo';
+import '../../styles/scss/main.scss';
+
+interface Props {
+	seo: SeoData;
+}
+
+const { seo } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<SeoHead {...seo} />
+	</head>
+	<body>
+		<slot />
+		<Analytics />
+	</body>
+</html>
