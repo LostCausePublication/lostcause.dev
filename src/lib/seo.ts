@@ -20,8 +20,20 @@ export function getCanonicalUrl(pathname: string): string {
 	return new URL(pathname, SITE.url).href;
 }
 
+const SITE_TITLE_SUFFIX = ` | ${SITE.name}`;
+
 export function getPageTitle(title: string): string {
-	return title === SITE.name ? `${SITE.name} | ${SITE.tagline}` : `${title} | ${SITE.name}`;
+	if (title === SITE.name) {
+		return `${SITE.name} | Coding Publication`;
+	}
+
+	const fullTitle = `${title}${SITE_TITLE_SUFFIX}`;
+	if (fullTitle.length <= 60) {
+		return fullTitle;
+	}
+
+	const maxTitleLength = 60 - SITE_TITLE_SUFFIX.length - 1;
+	return `${title.slice(0, maxTitleLength).trimEnd()}…${SITE_TITLE_SUFFIX}`;
 }
 
 export { getDefaultOgImageUrl } from './og-images';

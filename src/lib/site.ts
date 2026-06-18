@@ -22,7 +22,7 @@ export const SOCIAL_LINKS = [
 
 export const LUNAFINDER = {
 	name: 'LunaFinder',
-	url: 'https://lunafinder.com',
+	url: 'https://lunafinder.com?ref=lostcasedev',
 } as const;
 
 export const LUNAFINDER_LINKS = [

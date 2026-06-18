@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lostcause.dev/sitemap-index.xml

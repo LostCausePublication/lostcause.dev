@@ -5,3 +5,13 @@ $color-white: #fff;
 
 $font-sans: 'Bricolage Grotesque', sans-serif;
 $font-mono: 'Share Tech Mono', monospace;
+
+$tap-target-min: 3rem;
+
+@mixin tap-target {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: $tap-target-min;
+	min-height: $tap-target-min;
+}
