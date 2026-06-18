@@ -6,7 +6,7 @@ export const SITE = {
 	url: 'https://lostcause.dev',
 	themeColor: '#f9f7f2',
 	githubUrl: 'https://github.com/LostCausePublication',
-	twitterUrl: 'https://x.com/lostcause_dev',
+	twitterUrl: 'https://x.com/lostcausedotdev',
 } as const;
 
 export const NAV_LINKS = [
