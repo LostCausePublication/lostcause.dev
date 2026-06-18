@@ -78,9 +78,9 @@
 }
 
 .social-link {
-	display: inline-flex;
-	align-items: center;
+	@include tap-target;
 	gap: 0.5rem;
+	padding: 0.75rem;
 	color: $color-primary;
 	font-family: $font-mono;
 	font-size: 0.875rem;
@@ -116,6 +116,8 @@
 }
 
 .latest-posts__link {
+	@include tap-target;
+	padding-inline: 0.25rem;
 	color: $color-accent;
 	font-family: $font-mono;
 	font-size: 0.875rem;

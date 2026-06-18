@@ -6,7 +6,7 @@ export const SITE = {
 	url: 'https://lostcause.dev',
 	themeColor: '#f9f7f2',
 	githubUrl: 'https://github.com/LostCausePublication',
-	twitterUrl: 'https://x.com/lostcause_dev',
+	twitterUrl: 'https://x.com/lostcausedotdev',
 } as const;
 
 export const NAV_LINKS = [
@@ -22,11 +22,5 @@ export const SOCIAL_LINKS = [
 
 export const LUNAFINDER = {
 	name: 'LunaFinder',
-	url: 'https://lunafinder.com',
+	url: 'https://lunafinder.com?ref=lostcasedev',
 } as const;
-
-export const LUNAFINDER_LINKS = [
-	{ label: "Who It's For", href: 'https://lunafinder.com/#who-its-for' },
-	{ label: 'See it in action', href: 'https://lunafinder.com/#demo' },
-	{ label: 'Get LunaFinder', href: 'https://lunafinder.com/#pricing' },
-] as const;
