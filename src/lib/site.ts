@@ -24,9 +24,3 @@ export const LUNAFINDER = {
 	name: 'LunaFinder',
 	url: 'https://lunafinder.com?ref=lostcasedev',
 } as const;
-
-export const LUNAFINDER_LINKS = [
-	{ label: "Who It's For", href: 'https://lunafinder.com/#who-its-for' },
-	{ label: 'See it in action', href: 'https://lunafinder.com/#demo' },
-	{ label: 'Get LunaFinder', href: 'https://lunafinder.com/#pricing' },
-] as const;

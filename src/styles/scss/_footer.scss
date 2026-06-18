@@ -103,24 +103,17 @@ $footer-link: #f0d9a8;
 	color: $color-accent;
 }
 
-.footer-lunafinder__links {
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
-	list-style: none;
+.footer-lunafinder__description,
+.footer-lunafinder__highlights {
+	margin: 0;
+	font-size: 0.875rem;
+	font-weight: 500;
+	line-height: 1.5;
+	color: $footer-text-muted;
 }
 
-.footer-lunafinder__link {
-	color: $footer-link;
-	font-size: 0.875rem;
-	text-decoration: none;
-	transition: color 0.15s ease;
-
-	&:hover,
-	&:focus-visible {
-		color: $color-white;
-		text-decoration: underline;
-	}
+.footer-lunafinder__description {
+	margin-bottom: 0.5rem;
 }
 
 .footer-nav {

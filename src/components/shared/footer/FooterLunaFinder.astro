@@ -1,6 +1,6 @@
 ---
 import lunaFinderLogo from '../../../assets/lunafinder.svg';
-import { LUNAFINDER, LUNAFINDER_LINKS } from '../../../lib/site';
+import { LUNAFINDER } from '../../../lib/site';
 ---
 
 <div class="footer-lunafinder">
@@ -24,15 +24,7 @@ import { LUNAFINDER, LUNAFINDER_LINKS } from '../../../lib/site';
 			</span>
 		</span>
 	</a>
-	<ul class="footer-lunafinder__links">
-		{
-			LUNAFINDER_LINKS.map((link) => (
-				<li>
-					<a class="footer-lunafinder__link" href={link.href} target="_blank" rel="noopener">
-						{link.label}
-					</a>
-				</li>
-			))
-		}
-	</ul>
+	<p class="footer-lunafinder__description">The AI Photo Manager for macOS.</p>
+	<p class="footer-lunafinder__description">Works with your existing folders and hard drives.</p>
+	<p class="footer-lunafinder__highlights">🌧️ No cloud. 💰 No subscription.</p>
 </div>
