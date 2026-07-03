@@ -1,0 +1,27 @@
+---
+import { resolveToolAvatar } from '../../lib/tools';
+
+interface Props {
+	src: string;
+	name: string;
+	class?: string;
+	size?: 'sm' | 'md' | 'lg';
+}
+
+const { src, name, class: className, size = 'sm' } = Astro.props;
+const image = resolveToolAvatar(src);
+---
+
+{
+	image && (
+		<img
+			class:list={['tools-logo', `tools-logo--${size}`, className]}
+			src={image.src}
+			width={image.width}
+			height={image.height}
+			alt={`${name} logo`}
+			loading="lazy"
+			decoding="async"
+		/>
+	)
+}

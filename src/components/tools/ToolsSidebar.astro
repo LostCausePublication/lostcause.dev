@@ -1,0 +1,41 @@
+---
+import ToolsCategoryIcon from './ToolsCategoryIcon.astro';
+import { TOOL_CATEGORY_GROUPS } from '../../lib/tool-categories';
+import type { Tool } from '../../lib/tools';
+
+interface Props {
+	toolsByCategory: Map<string, Tool[]>;
+}
+
+const { toolsByCategory } = Astro.props;
+
+const visibleGroups = TOOL_CATEGORY_GROUPS.map((group) => ({
+	...group,
+	subcategories: group.subcategories.filter((subcategory) => toolsByCategory.has(subcategory.id)),
+})).filter((group) => group.subcategories.length > 0);
+---
+
+<nav class="tools-sidebar" aria-label="Tool categories">
+	{visibleGroups.map((group) => (
+		<div class="tools-sidebar__group">
+			<p class="tools-sidebar__group-label">
+				<ToolsCategoryIcon icon={group.icon} />
+				<span>{group.label}</span>
+			</p>
+			<ul class="tools-sidebar__list">
+				{group.subcategories.map((subcategory) => (
+					<li>
+						<a
+							class="tools-sidebar__link"
+							href={`#${subcategory.id}`}
+							data-tools-category={subcategory.id}
+						>
+							<ToolsCategoryIcon icon={subcategory.icon} />
+							<span>{subcategory.label}</span>
+						</a>
+					</li>
+				))}
+			</ul>
+		</div>
+	))}
+</nav>

@@ -39,4 +39,15 @@ const authors = defineCollection({
 	}),
 });
 
-export const collections = { blog, authors };
+const tools = defineCollection({
+	loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/tools' }),
+	schema: z.object({
+		name: z.string(),
+		categories: z.array(z.string()).min(1),
+		description: z.string(),
+		avatar: z.string(),
+		url: z.string().url(),
+	}),
+});
+
+export const collections = { blog, authors, tools };

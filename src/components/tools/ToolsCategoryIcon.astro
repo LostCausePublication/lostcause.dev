@@ -1,0 +1,21 @@
+---
+import { resolveCategoryIcon } from '../../lib/tools';
+
+interface Props {
+	icon: string;
+	class?: string;
+}
+
+const { icon, class: className } = Astro.props;
+const image = resolveCategoryIcon(icon);
+---
+
+{
+	image && (
+		<span
+			class:list={['tools-category-icon', className]}
+			style={`--tools-icon-url: url(${image.src})`}
+			aria-hidden="true"
+		/>
+	)
+}
