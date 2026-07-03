@@ -1,0 +1,148 @@
+---
+import ToolsLayout from '../components/layout/ToolsLayout.astro';
+import ToolsCard from '../components/tools/ToolsCard.astro';
+import ToolsJumpNav from '../components/tools/ToolsJumpNav.astro';
+import ToolsSidebar from '../components/tools/ToolsSidebar.astro';
+import { getAllSubcategories } from '../lib/tool-categories';
+import { getAllTools, groupToolsByCategory } from '../lib/tools';
+
+const tools = await getAllTools();
+const toolsByCategory = groupToolsByCategory(tools);
+const subcategories = getAllSubcategories().filter((subcategory) => toolsByCategory.has(subcategory.id));
+---
+
+<ToolsLayout
+	seo={{
+		title: 'Tools',
+		description: 'A curated list of useful mini tools to boost your productivity.',
+		canonicalPath: '/tools',
+	}}
+>
+	<ToolsSidebar slot="sidebar" toolsByCategory={toolsByCategory} />
+
+	<section class="page-section tools-page">
+		<h1 class="page-section__title">Tools</h1>
+		<p class="page-section__description">A curated list of useful mini tools to boost your productivity.</p>
+
+		<ToolsJumpNav subcategories={subcategories} />
+
+		<div class="tools-sections">
+			{subcategories.map((subcategory) => {
+				const categoryTools = toolsByCategory.get(subcategory.id) ?? [];
+
+				return (
+					<section
+						class="tools-section"
+						id={subcategory.id}
+						data-tools-section={subcategory.id}
+					>
+						<header class="tools-section__header">
+							<h2 class="tools-section__title">{subcategory.label}</h2>
+							<p class="tools-section__description">{subcategory.description}</p>
+						</header>
+
+						<ul class="tools-list">
+							{categoryTools.map((tool) => (
+								<li>
+									<ToolsCard tool={tool} />
+								</li>
+							))}
+						</ul>
+					</section>
+				);
+			})}
+		</div>
+	</section>
+</ToolsLayout>
+
+<script>
+	const SCROLL_OFFSET = 16;
+
+	function getScrollOffset(): number {
+		const jumpNav = document.querySelector<HTMLElement>('.tools-jump-nav');
+		return (jumpNav?.offsetHeight ?? 0) + SCROLL_OFFSET;
+	}
+
+	function scrollToCategory(categoryId: string) {
+		const section = document.getElementById(categoryId);
+		if (!section) return;
+
+		const top = section.getBoundingClientRect().top + window.scrollY - getScrollOffset();
+		window.scrollTo({ top, behavior: 'smooth' });
+	}
+
+	function setActiveCategory(categoryId: string) {
+		const sidebarLinks = document.querySelectorAll<HTMLAnchorElement>('[data-tools-category]');
+		const jumpSelect = document.getElementById('tools-jump-select') as HTMLSelectElement | null;
+
+		for (const link of sidebarLinks) {
+			const isActive = link.dataset.toolsCategory === categoryId;
+			link.classList.toggle('tools-sidebar__link--active', isActive);
+
+			if (isActive) {
+				link.setAttribute('aria-current', 'location');
+			} else {
+				link.removeAttribute('aria-current');
+			}
+		}
+
+		if (jumpSelect && jumpSelect.value !== categoryId) {
+			jumpSelect.value = categoryId;
+		}
+	}
+
+	function initToolsPage() {
+		const sections = [...document.querySelectorAll<HTMLElement>('[data-tools-section]')];
+		const sidebar = document.querySelector('.tools-sidebar');
+		const jumpSelect = document.getElementById('tools-jump-select') as HTMLSelectElement | null;
+
+		if (sections.length === 0) return;
+
+		const hashCategory = window.location.hash.replace(/^#/, '');
+		if (hashCategory && sections.some((section) => section.id === hashCategory)) {
+			requestAnimationFrame(() => scrollToCategory(hashCategory));
+		}
+
+		sidebar?.addEventListener('click', (event) => {
+			const link = (event.target as HTMLElement).closest<HTMLAnchorElement>('[data-tools-category]');
+			if (!link?.dataset.toolsCategory) return;
+
+			event.preventDefault();
+			const categoryId = link.dataset.toolsCategory;
+			scrollToCategory(categoryId);
+			history.replaceState(null, '', `#${categoryId}`);
+		});
+
+		jumpSelect?.addEventListener('change', () => {
+			const categoryId = jumpSelect.value;
+			scrollToCategory(categoryId);
+			history.replaceState(null, '', `#${categoryId}`);
+		});
+
+		window.addEventListener('hashchange', () => {
+			const categoryId = window.location.hash.replace(/^#/, '');
+			if (categoryId) scrollToCategory(categoryId);
+		});
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				const visible = entries
+					.filter((entry) => entry.isIntersecting)
+					.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+				const section = visible[0]?.target as HTMLElement | undefined;
+				if (section?.id) setActiveCategory(section.id);
+			},
+			{
+				rootMargin: `-${getScrollOffset()}px 0px -55% 0px`,
+				threshold: [0, 0.25, 0.5, 0.75, 1],
+			},
+		);
+
+		for (const section of sections) observer.observe(section);
+
+		setActiveCategory(sections[0].id);
+	}
+
+	initToolsPage();
+</script>

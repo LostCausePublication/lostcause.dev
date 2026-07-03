@@ -1,0 +1,30 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import SiteNav from '../shared/SiteNav.astro';
+import Logo from '../shared/Logo.astro';
+import Footer from '../shared/Footer.astro';
+import type { SeoData } from '../../lib/seo';
+
+interface Props {
+	seo: SeoData;
+}
+
+const { seo } = Astro.props;
+---
+
+<BaseLayout seo={seo}>
+	<main class="page page--tools">
+		<header class="page-header page-header--wide">
+			<Logo />
+			<SiteNav />
+		</header>
+
+		<div class="tools-layout">
+			<slot name="sidebar" />
+			<div class="tools-layout__main">
+				<slot />
+			</div>
+		</div>
+	</main>
+	<Footer />
+</BaseLayout>

@@ -1,0 +1,18 @@
+---
+import type { ToolSubcategory } from '../../lib/tool-categories';
+
+interface Props {
+	subcategories: ToolSubcategory[];
+}
+
+const { subcategories } = Astro.props;
+---
+
+<nav class="tools-jump-nav" aria-label="Jump to category">
+	<label class="tools-jump-nav__label" for="tools-jump-select">Jump to</label>
+	<select id="tools-jump-select" class="tools-jump-nav__select">
+		{subcategories.map((subcategory) => (
+			<option value={subcategory.id}>{subcategory.label}</option>
+		))}
+	</select>
+</nav>

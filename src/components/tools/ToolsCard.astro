@@ -1,0 +1,27 @@
+---
+import ToolsLogo from './ToolsLogo.astro';
+import type { Tool } from '../../lib/tools';
+import { getSubcategoryLabel } from '../../lib/tool-categories';
+
+interface Props {
+	tool: Tool;
+}
+
+const { tool } = Astro.props;
+---
+
+<a class="tools-card" href={tool.data.url} target="_blank" rel="noopener noreferrer">
+	<span class="tools-card__external" aria-hidden="true">↗</span>
+	<div class="tools-card__header">
+		<ToolsLogo src={tool.data.avatar} name={tool.data.name} size="sm" />
+		<div class="tools-card__meta">
+			<h2 class="tools-card__name">{tool.data.name}</h2>
+			<div class="tools-card__badges">
+				{tool.data.categories.map((category) => (
+					<span class="category-badge">{getSubcategoryLabel(category)}</span>
+				))}
+			</div>
+		</div>
+	</div>
+	<p class="tools-card__description">{tool.data.description}</p>
+</a>
