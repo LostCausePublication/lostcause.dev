@@ -38,6 +38,19 @@ export const TOOL_CATEGORY_GROUPS: ToolCategoryGroup[] = [
 			},
 		],
 	},
+	{
+		id: 'productivity',
+		label: 'Productivity',
+		icon: 'assets/tools/categories/productivity.svg',
+		subcategories: [
+			{
+				id: 'writing',
+				label: 'Writing',
+				description: 'Drafting, editing, and revision tools for written content.',
+				icon: 'assets/tools/categories/writing.svg',
+			},
+		],
+	},
 ];
 
 export function getAllSubcategories(): ToolSubcategory[] {
