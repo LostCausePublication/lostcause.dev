@@ -1,7 +1,7 @@
 ---
 import avatar from '../../assets/avatar.png';
 import SocialLinks from './SocialLinks.astro';
-import { SITE } from '../../lib/site';
+import { SITE, TAGLINES } from '../../lib/site';
 ---
 
 <div class="hero">
@@ -17,12 +17,84 @@ import { SITE } from '../../lib/site';
 		<span class="title-primary">LOSTCAUSE.</span><span class="title-accent">DEV</span>
 	</h1>
 
-	<p class="subtitle">{SITE.tagline}</p>
+	<p class="subtitle">
+		<span class="subtitle-text" data-taglines={JSON.stringify(TAGLINES)} aria-live="polite"
+			>{SITE.tagline}</span
+		><span class="subtitle-caret" aria-hidden="true"></span>
+	</p>
 
 	<p class="description">
-		A not-so-serious <span class="description-highlight">coding publication</span> about open source, CLI tools,
-		programming languages, and fun projects.
+		A not-so-serious <span class="description-highlight">coding publication</span> about the JavaScript/TypeScript
+		ecosystem, open-source projects and CLI tools.
 	</p>
 
 	<SocialLinks />
 </div>
+
+<script>
+	const el = document.querySelector<HTMLElement>('.subtitle-text[data-taglines]');
+	const raw = el?.dataset.taglines;
+
+	if (el && raw) {
+		let taglines: string[] = [];
+		try {
+			taglines = JSON.parse(raw);
+		} catch {
+			taglines = [el.textContent ?? ''];
+		}
+
+		if (taglines.length > 0) {
+			const TYPE_SPEED = 35;
+			const DELETE_SPEED = 30;
+			const HOLD_TIME = 10000;
+			const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+			const pickNext = (current: number) => {
+				if (taglines.length === 1) return current;
+				let next = current;
+				while (next === current) {
+					next = Math.floor(Math.random() * taglines.length);
+				}
+				return next;
+			};
+
+			let index = Math.floor(Math.random() * taglines.length);
+
+			if (prefersReduced) {
+				el.textContent = taglines[index];
+				setInterval(() => {
+					index = pickNext(index);
+					el.textContent = taglines[index];
+				}, HOLD_TIME);
+			} else {
+				let text = taglines[index];
+				let char = 0;
+				el.textContent = '';
+
+				const type = () => {
+					char += 1;
+					el.textContent = text.slice(0, char);
+					if (char < text.length) {
+						setTimeout(type, TYPE_SPEED);
+					} else {
+						setTimeout(erase, HOLD_TIME);
+					}
+				};
+
+				const erase = () => {
+					char -= 1;
+					el.textContent = text.slice(0, char);
+					if (char > 0) {
+						setTimeout(erase, DELETE_SPEED);
+					} else {
+						index = pickNext(index);
+						text = taglines[index];
+						setTimeout(type, TYPE_SPEED);
+					}
+				};
+
+				type();
+			}
+		}
+	}
+</script>

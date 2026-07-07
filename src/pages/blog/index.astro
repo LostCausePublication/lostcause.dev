@@ -10,7 +10,8 @@ const posts = await getPublishedPosts();
 <PageLayout
 	seo={{
 		title: 'Blog',
-		description: 'Articles about open source, CLI tools, programming languages, and fun projects.',
+		description:
+			'Articles about the JavaScript/TypeScript ecosystem, open-source projects and CLI tools.',
 		canonicalPath: '/blog',
 	}}
 	breadcrumbs={[{ label: 'Blog' }]}
@@ -18,7 +19,7 @@ const posts = await getPublishedPosts();
 	<section class="page-section">
 		<h1 class="page-section__title">Blog</h1>
 		<p class="page-section__description">
-			Open source, CLI tools, programming languages, and projects built for the joy of coding.
+			The JavaScript/TypeScript ecosystem, open-source projects and CLI tools, for the joy of coding.
 		</p>
 
 		<BlogCategoryList />
