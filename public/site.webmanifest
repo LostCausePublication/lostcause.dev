@@ -1,7 +1,7 @@
 {
 	"name": "LOSTCAUSE.DEV",
 	"short_name": "LOSTCAUSE",
-	"description": "A not-so-serious coding publication about open source, CLI tools, programming languages, and fun projects.",
+	"description": "A not-so-serious coding publication about JavaScript/TypeScript ecosystem, open-source projects and CLI tools.",
 	"start_url": "/",
 	"display": "standalone",
 	"theme_color": "#f9f7f2",

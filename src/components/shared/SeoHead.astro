@@ -15,6 +15,7 @@ const {
 	modifiedTime,
 	authors = [],
 	categories = [],
+	keywords,
 	noIndex = false,
 } = Astro.props;
 
@@ -25,6 +26,8 @@ const ogImage = image ?? getDefaultOgImageUrl();
 const ogImageAltText = imageAlt ?? description;
 const robots = noIndex ? 'noindex, nofollow' : 'index, follow';
 const twitterHandle = SITE.twitterUrl.replace('https://x.com/', '@');
+const metaKeywords = [...(keywords ?? SITE.keywords), ...categories];
+const keywordsContent = [...new Set(metaKeywords)].join(', ');
 
 const jsonLd =
 	type === 'article'
@@ -52,6 +55,7 @@ const jsonLd =
 				name: SITE.name,
 				description: SITE.description,
 				url: SITE.url,
+				keywords: keywordsContent,
 			};
 ---
 
@@ -59,6 +63,7 @@ const jsonLd =
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="generator" content={Astro.generator} />
 <meta name="description" content={description} />
+{keywordsContent && <meta name="keywords" content={keywordsContent} />}
 <meta name="robots" content={robots} />
 <meta name="theme-color" content={SITE.themeColor} />
 <link rel="canonical" href={canonicalUrl} />

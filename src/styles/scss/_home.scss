@@ -55,6 +55,34 @@
 	line-height: 1.4;
 }
 
+.subtitle-caret {
+	display: inline-block;
+	width: 0.6ch;
+	height: 1.1em;
+	margin-left: 0.05em;
+	background-color: $color-white;
+	vertical-align: text-bottom;
+	animation: subtitle-caret-blink 1.05s step-end infinite;
+}
+
+@keyframes subtitle-caret-blink {
+	0%,
+	50% {
+		opacity: 1;
+	}
+
+	50.01%,
+	100% {
+		opacity: 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.subtitle-caret {
+		animation: none;
+	}
+}
+
 .description {
 	margin-top: 1.5rem;
 	max-width: 36rem;

@@ -13,6 +13,8 @@ export type SeoData = {
 	modifiedTime?: Date;
 	authors?: string[];
 	categories?: string[];
+	/** Overrides the default site-wide keywords. */
+	keywords?: string[];
 	noIndex?: boolean;
 };
 
