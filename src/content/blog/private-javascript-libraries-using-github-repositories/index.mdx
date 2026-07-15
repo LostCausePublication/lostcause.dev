@@ -8,7 +8,7 @@ categories:
   - JavaScript
   - Git
 featured: false
-ogImage: assets/blog/private-javascript-libraries-using-github-repositories/ogimage.png
+ogImage: ogimage.png
 ogImageAlt: A tutorial where I showcase a method I use to quickly share code across multiple personal projects using private Github repositories for free.
 draft: false
 ---
@@ -35,19 +35,19 @@ The requirements list is minimal. You need:
 
 Let's start by creating a Github repository. Go to github.com and login if you didn't do that already:
 
-![Screenshot 1](/src/assets/blog/private-javascript-libraries-using-github-repositories/screenshot1.png)
+![Screenshot 1](screenshot1.png)
 
 Fill in the name you want. I've named mine `bootstrap`. My private repository is ready.
 
-![Screenshot 2](/src/assets/blog/private-javascript-libraries-using-github-repositories/screenshot2.png)
+![Screenshot 2](screenshot2.png)
 
 Now let's clone the repository locally.
 
-![Screenshot 3](/src/assets/blog/private-javascript-libraries-using-github-repositories/screenshot3.png)
+![Screenshot 3](screenshot3.png)
 
 Let's write some code, or let Cursor do its job maybe.
 
-![Screenshot 4](/src/assets/blog/private-javascript-libraries-using-github-repositories/screenshot4.png)
+![Screenshot 4](screenshot4.png)
 
 This is the prompt I'm using, in case you want to use it:
 
@@ -68,19 +68,19 @@ Requirements:
 
 This is what Cursor generated. Review the code, make changes, or keep adding features or libraries you want in your bootstrap library.
 
-![Screenshot 5](/src/assets/blog/private-javascript-libraries-using-github-repositories/screenshot5.png)
+![Screenshot 5](screenshot5.png)
 
 I've reviewed the code. Now let's commit and push the changes to Github.
 
-![Screenshot 6](/src/assets/blog/private-javascript-libraries-using-github-repositories/screenshot6.png)
+![Screenshot 6](screenshot6.png)
 
 The code is on Github. The URL to my private repository is `https://github.com/razvanmtn/bootstrap`.
 
-![Screenshot 7](/src/assets/blog/private-javascript-libraries-using-github-repositories/screenshot7.png)
+![Screenshot 7](screenshot7.png)
 
 Now that the library repository is ready, let's create a sample app that uses the library app we've just created. I've created a new folder called `my-sample-saas`. Let's initialize the project by running `npm init`.
 
-![Screenshot 8](/src/assets/blog/private-javascript-libraries-using-github-repositories/screenshot8.png)
+![Screenshot 8](screenshot8.png)
 
 Now let's open the newly created project. In order to use the library we've just created, we need to update the `package.json` file and add our library in the dependencies. In my case, I've added this to the dependencies:
 
@@ -96,19 +96,19 @@ Across my app, I want to import the package as `@razvanmuntian/bootstrap`, that'
 
 The important part is what comes after the colon: `github:razvanmtn/bootstrap`. You should replace this with your Github username and the name of the library repository you've just created.
 
-![Screenshot 9](/src/assets/blog/private-javascript-libraries-using-github-repositories/screenshot9.png)
+![Screenshot 9](screenshot9.png)
 
 Now, let's run `npm install`. If you followed along, you should see the library package in the `node_modules` folder (like in the screenshot below):
 
-![Screenshot 10](/src/assets/blog/private-javascript-libraries-using-github-repositories/screenshot10.png)
+![Screenshot 10](screenshot10.png)
 
 **⚠️ Important notice**: if you use SSH key in order to access Github repositories, to clone and push changes from your local machine, this step should work flawlessly. However, if you're trying to deploy your app to a different machine where you don't have access to your Github account through SSH key, you might have to create a deployment key and use it on the machine you want to deploy the app to. You can do that by going to Github, on the Settings page of your repository. Navigate to "Deploy keys" page and add a deploy key.
 
-![Screenshot 11](/src/assets/blog/private-javascript-libraries-using-github-repositories/screenshot11.png)
+![Screenshot 11](screenshot11.png)
 
 Great! We did some good progress. Let's now use the `createServer` utility function from the bootstrap repository in our sample app. Here's a quick example you can follow:
 
-![Screenshot 12](/src/assets/blog/private-javascript-libraries-using-github-repositories/screenshot12.png)
+![Screenshot 12](screenshot12.png)
 
 Notice how the utility functions are imported.
 
@@ -118,13 +118,13 @@ const { createServer } = require('@razvanmuntian/bootstrap');
 
 Start the server by running `node index.js` and you should be able to access the page in the browser at `http://localhost:3000`.
 
-![Screenshot 13](/src/assets/blog/private-javascript-libraries-using-github-repositories/screenshot13.png)
+![Screenshot 13](screenshot13.png)
 
 So far so good. Let's discuss one more aspect: how can you update the bootstrap library codebase?
 
 Firstly, let's add the new features to the library. In my case, I've added a `setupPingRoute` function. It receives an Express.js app as parameter and adds a GET `/ping` route. Make sure to export the function.
 
-![Screenshot 14](/src/assets/blog/private-javascript-libraries-using-github-repositories/screenshot14.png)
+![Screenshot 14](screenshot14.png)
 
 The process is as described above: you should commit and push the changes to Github.
 
@@ -134,15 +134,15 @@ To view the changes in the sample app, you need to run `npm update` for that. Ma
 npm update @razvanmuntian/bootstrap
 ```
 
-![Screenshot 15](/src/assets/blog/private-javascript-libraries-using-github-repositories/screenshot15.png)
+![Screenshot 15](screenshot15.png)
 
 Now let's change the sample app code and apply the ping route that we've just implemented. Here's the code I've just added:
 
-![Screenshot 16](/src/assets/blog/private-javascript-libraries-using-github-repositories/screenshot16.png)
+![Screenshot 16](screenshot16.png)
 
 You can restart the server and go to `http://localhost:3000/ping` and you should receive the `pong` response back.
 
-![Screenshot 17](/src/assets/blog/private-javascript-libraries-using-github-repositories/screenshot17.png)
+![Screenshot 17](screenshot17.png)
 
 Great! We made it till the end.
 

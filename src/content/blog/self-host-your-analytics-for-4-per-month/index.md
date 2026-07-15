@@ -8,7 +8,7 @@ categories:
   - Self-Hosting
   - DevOps
 featured: false
-ogImage: assets/blog/self-host-your-analytics-for-4-per-month/ogimage.png
+ogImage: ogimage.png
 ogImageAlt: A full walkthrough covering VPS setup, firewall rules, systemd, Caddy reverse proxy and GoatCounter configuration on a low-spec DigitalOcean droplet.
 draft: false
 ---
@@ -41,7 +41,7 @@ For this use case, a $4/month droplet running Ubuntu 24.04 LTS should work just 
 
 Creating one can be done directly in the DigitalOcean dashboard. Depending on updates, the interface might look different:
 
-![Self-host your analytics for $4 per month Screenshot 1](/src/assets/blog/self-host-your-analytics-for-4-per-month/goatcounter_1.jpg)
+![Self-host your analytics for $4 per month Screenshot 1](goatcounter_1.jpg)
 ## Step 2: Non-root sudo user creation
 
 We don't want to use the root to run everything. This is a well-known security practice. In case of a compromise, the newly created user has limited permissions.
@@ -196,7 +196,7 @@ Caddy automatically requests and renews a Let's Encrypt certificate for `stats.y
 
 We should be good to go. Let's open `https://stats.yourdomain.com` and log in with the dashboard credentials (the ones configured at Step 5).
 
-![Self-host your analytics for $4 per month Screenshot 2](/src/assets/blog/self-host-your-analytics-for-4-per-month/goatcounter_2.jpg)
+![Self-host your analytics for $4 per month Screenshot 2](goatcounter_2.jpg)
 ## Step 8: Adding more domains
 
 So we have the default installation ready. Now it's time to add more subdomains for each app we want to track.

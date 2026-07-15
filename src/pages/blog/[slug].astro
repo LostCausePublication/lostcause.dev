@@ -1,4 +1,5 @@
 ---
+import path from 'node:path';
 import PostLayout from '../../components/layout/PostLayout.astro';
 import PostHeader from '../../components/blog/PostHeader.astro';
 import PostAuthorFooter from '../../components/blog/PostAuthorFooter.astro';
@@ -23,7 +24,11 @@ const slug = getPostSlug(post);
 const authors = await getAuthorsBySlugs(post.data.authors);
 const primaryCategory = post.data.categories[0];
 const primaryCategorySlug = getCategorySlug(primaryCategory);
-const ogImageUrl = getPostOgImageUrl(post.data.ogImage);
+
+const ogImageName = post.data.ogImage || 'ogimage.png';
+const postFolderPath = path.dirname(post.filePath || '');
+const ogImagePath = path.join(postFolderPath, ogImageName);
+const ogImageUrl = getPostOgImageUrl(ogImagePath);
 ---
 
 <PostLayout

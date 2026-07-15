@@ -7,7 +7,7 @@ authors:
 categories:
   - Vue.js
 featured: false
-ogImage: assets/blog/learning-vue-part-3-building-the-project/ogimage.png
+ogImage: ogimage.png
 ogImageAlt: Third post in the series - build a gradient generator app following Vue concepts learned until now.
 draft: false
 ---
@@ -31,14 +31,14 @@ I'm a developer and a content creator. Taking many screenshots led me to this id
 
 The purpose of the app: configuring a backdrop to make the process of taking screenshots way easier. The background should be either a solid color or a gradient, and render it across the whole width and height of the web app, so that whenever I want to take a screenshot of a window on my computer, I can place it on the gradient for a better look (see the screenshot below).
 
-![Learning Vue Screenshot 1](/src/assets/blog/learning-vue-part-3-building-the-project/learning_vue_3_1.png)
+![Learning Vue Screenshot 1](learning_vue_3_1.png)
 
 ## Components
 
 I organized the whole app into 3 components:
 ### App.vue
 
-![Learning Vue Screenshot 2](/src/assets/blog/learning-vue-part-3-building-the-project/learning_vue_3_2.png)
+![Learning Vue Screenshot 2](learning_vue_3_2.png)
 
 - this is the entry point
 - whenever the properties in the settings popup change, the `onColorChange` handler gets called and it updates the background color of the whole page
@@ -46,7 +46,7 @@ I organized the whole app into 3 components:
 - in order to persist the values of the Settings modal even after closing it, I'm using the `v-show` directive. The modal remains mounted in the DOM and gets hidden once the toggle button is clicked. The difference between `v-show` and `v-if` is that `v-if` removes the modal from the DOM completely. Anytime the component is remounted, it gets reinitialized: it's a new component and does not persist the previous state.
 ### ToggleButton.vue
 
-![Learning Vue Screenshot 3](/src/assets/blog/learning-vue-part-3-building-the-project/learning_vue_3_3.png)
+![Learning Vue Screenshot 3](learning_vue_3_3.png)
 
 - this is a simple rounded icon button containing a cog SVG
 - I want it fixed at the top left of the screen
@@ -54,13 +54,13 @@ I organized the whole app into 3 components:
 
 ### Settings.vue
 
-![Learning Vue Screenshot 4](/src/assets/blog/learning-vue-part-3-building-the-project/learning_vue_3_4.png)
+![Learning Vue Screenshot 4](learning_vue_3_4.png)
 
 - this is the component responsible for background configuration
 - there are 2 refs: `color1` and `color2`. Based on the type `solid` or `gradient`, these colors are rendered in the settings panel, and 1 or 2 color pickers appear
 - the watcher on line 15 is called whenever `type`, `color1`, or `color2` values change. When any of the variables change, the parent component (in this case `App.vue`) is notified
 
-![Learning Vue Screenshot 5](/src/assets/blog/learning-vue-part-3-building-the-project/learning_vue_3_5.png)
+![Learning Vue Screenshot 5](learning_vue_3_5.png)
 ## Further improvements
 
 These are some further improvements I consider:
