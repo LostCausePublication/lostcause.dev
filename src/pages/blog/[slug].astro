@@ -35,7 +35,7 @@ const ogImageUrl = getPostOgImageUrl(ogImagePath);
 	seo={{
 		title: post.data.title,
 		description: post.data.description,
-		canonicalPath: `/blog/${slug}`,
+        canonicalPath: `/blog/${slug}/`,
 		image: ogImageUrl,
 		imageAlt: post.data.ogImageAlt ?? post.data.title,
 		type: 'article',

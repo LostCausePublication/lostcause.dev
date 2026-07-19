@@ -19,7 +19,7 @@ const posts = await getPostsByCategory(category.slug);
 	seo={{
 		title: category.name,
 		description: `All posts in the ${category.name} category on Lost Cause Publication.`,
-		canonicalPath: `/blog/category/${category.slug}`,
+        canonicalPath: `/blog/category/${category.slug}/`,
 	}}
 	breadcrumbs={[
 		{ label: 'Blog', href: '/blog' },
