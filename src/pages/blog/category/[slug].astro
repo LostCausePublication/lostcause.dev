@@ -22,7 +22,7 @@ const posts = await getPostsByCategory(category.slug);
         canonicalPath: `/blog/category/${category.slug}/`,
 	}}
 	breadcrumbs={[
-		{ label: 'Blog', href: '/blog' },
+        { label: 'Blog', href: '/blog/' },
 		{ label: category.name },
 	]}
 >

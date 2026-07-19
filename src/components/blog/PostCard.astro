@@ -15,7 +15,7 @@ const slug = getPostSlug(post);
 <article class="post-card">
 	<CategoryList categories={post.data.categories} />
 	<h2 class="post-card__title">
-		<a href={`/blog/${slug}`}>{post.data.title}</a>
+        <a href={`/blog/${slug}/`}>{post.data.title}</a>
 	</h2>
 	<p class="post-card__description">{post.data.description}</p>
 	<PostMeta post={post} />

@@ -32,9 +32,9 @@ export const TAGLINES = [
 
 export const NAV_LINKS = [
 	{ href: '/', label: 'Home' },
-	{ href: '/blog', label: 'Blog' },
-	{ href: '/authors', label: 'Authors' },
-	{ href: '/tools', label: 'Tools' },
+	{ href: '/blog/', label: 'Blog' },
+	{ href: '/authors/', label: 'Authors' },
+	{ href: '/tools/', label: 'Tools' },
 ] as const;
 
 export const SOCIAL_LINKS = [
