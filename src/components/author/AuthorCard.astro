@@ -15,7 +15,7 @@ const slug = getAuthorSlug(author);
 	<div class="author-card__header">
 		<AuthorAvatar filename={author.data.avatar} name={author.data.name} size="sm" rounded={true} />
 		<h2 class="author-card__name">
-			<a href={`/authors/${slug}`}>{author.data.name}</a>
+            <a href={`/authors/${slug}/`}>{author.data.name}</a>
 		</h2>
 	</div>
 	<p class="author-card__bio">{author.data.bio}</p>

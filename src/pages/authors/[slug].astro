@@ -23,7 +23,7 @@ const posts = await getPostsByAuthor(slug);
 	seo={{
 		title: author.data.name,
 		description: author.data.bio,
-		canonicalPath: `/authors/${slug}`,
+        canonicalPath: `/authors/${slug}/`,
 	}}
 >
 	<AuthorHeader author={author} />

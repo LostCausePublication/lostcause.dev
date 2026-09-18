@@ -9,7 +9,7 @@ import { SITE } from './site';
  * their original format (PNG/JPEG) since some social scrapers do not render WebP.
  */
 const blogOgImages = import.meta.glob<{ default: ImageMetadata }>(
-	'../assets/blog/**/*.{png,jpg,jpeg,webp,avif}',
+	'../content/blog/**/*.{png,jpg,jpeg,webp,avif}',
 	{ eager: true },
 );
 
@@ -17,10 +17,9 @@ const blogOgImages = import.meta.glob<{ default: ImageMetadata }>(
 function resolveOgImage(ogImagePath?: string): ImageMetadata {
 	if (!ogImagePath) return defaultOgImage;
 
-	const normalized = ogImagePath.replace(/^\//, '').replace(/^assets\//, '');
-	const key = `../assets/${normalized}`;
+	const normalized = ogImagePath.replace(/^\//, '').replace(/^src\//, '../');
 
-	return blogOgImages[key]?.default ?? defaultOgImage;
+	return blogOgImages[normalized]?.default ?? defaultOgImage;
 }
 
 /** Turn an emitted asset path into an absolute URL for social meta tags. */
