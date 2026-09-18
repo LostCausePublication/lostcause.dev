@@ -5,4 +5,5 @@ avatar: razvanmuntian.jpg
 website: https://razvan.page?ref=lostcause
 github: https://github.com/razvanmtn
 twitter: https://x.com/razvanmuntian
+youtube: https://youtube.com/@razvantech
 ---
