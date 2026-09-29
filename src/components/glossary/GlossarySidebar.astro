@@ -1,0 +1,48 @@
+---
+import {
+	GLOSSARY_INDEX_PATH,
+	getUsedCategories,
+	glossaryCategoryPath,
+} from '../../lib/glossary';
+
+interface Props {
+	activeCategoryId?: string;
+}
+
+const { activeCategoryId } = Astro.props;
+const categories = getUsedCategories();
+---
+
+<nav class="tools-sidebar" aria-label="Glossary categories">
+	<ul class="tools-sidebar__list">
+		<li>
+			<a
+				class:list={[
+					'tools-sidebar__link',
+					'glossary-sidebar__link',
+					!activeCategoryId && 'tools-sidebar__link--active',
+				]}
+				href={GLOSSARY_INDEX_PATH}
+			>
+				<span>All terms</span>
+			</a>
+		</li>
+		{
+			categories.map((category) => (
+				<li>
+					<a
+						class:list={[
+							'tools-sidebar__link',
+							'glossary-sidebar__link',
+							activeCategoryId === category.id && 'tools-sidebar__link--active',
+						]}
+						href={glossaryCategoryPath(category.id)}
+					>
+						<span>{category.label}</span>
+						<span class="glossary-sidebar__count">{category.count}</span>
+					</a>
+				</li>
+			))
+		}
+	</ul>
+</nav>

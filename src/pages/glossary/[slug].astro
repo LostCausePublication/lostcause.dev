@@ -1,0 +1,81 @@
+---
+import GlossaryActions from '../../components/glossary/GlossaryActions.astro';
+import PageLayout from '../../components/layout/PageLayout.astro';
+import { glossaryTerms } from '../../data/glossary';
+import {
+	getCategoryLabel,
+	glossaryCategoryPath,
+	glossaryTermJsonLd,
+	glossaryTermPath,
+	metaDescription,
+	relatedLinkLabel,
+} from '../../lib/glossary';
+
+export function getStaticPaths() {
+	return glossaryTerms.map((term) => ({
+		params: { slug: term.id },
+		props: { term },
+	}));
+}
+
+const { term } = Astro.props;
+const primaryCategory = term.categories[0];
+if (!primaryCategory) {
+	throw new Error(`Glossary term "${term.id}" has no category`);
+}
+const description = metaDescription(term.explanation);
+---
+
+<PageLayout
+	seo={{
+		title: term.term,
+		description,
+		canonicalPath: glossaryTermPath(term.id),
+		keywords: [term.term, ...term.categories.map((category) => getCategoryLabel(category))],
+		jsonLd: glossaryTermJsonLd(term),
+	}}
+	breadcrumbs={[
+		{ label: 'Glossary', href: '/glossary/' },
+		{
+			label: getCategoryLabel(primaryCategory),
+			href: glossaryCategoryPath(primaryCategory),
+		},
+		{ label: term.term },
+	]}
+>
+	<article class="page-section glossary-term">
+		<h1 class="page-section__title">{term.term}</h1>
+		<ul class="glossary-term__badges">
+			{
+				term.categories.map((category) => (
+					<li>
+						<a class="category-badge" href={glossaryCategoryPath(category)}>
+							{getCategoryLabel(category)}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+		<p class="glossary-term__explanation">{term.explanation}</p>
+		<GlossaryActions term={term} />
+		{
+			term.related.length > 0 && (
+				<section class="glossary-related">
+					<h2 class="glossary-related__title">Related reading</h2>
+					<ul class="glossary-related__list">
+						{term.related.map((url) => (
+							<li>
+								<a class="glossary-related__link" href={url} target="_blank" rel="noopener noreferrer">
+									{relatedLinkLabel(url, term.related)}
+									<span class="glossary-related__external" aria-hidden="true">
+										↗
+									</span>
+								</a>
+							</li>
+						))}
+					</ul>
+				</section>
+			)
+		}
+	</article>
+</PageLayout>

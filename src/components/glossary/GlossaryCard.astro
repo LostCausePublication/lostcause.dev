@@ -1,0 +1,26 @@
+---
+import type { GlossaryTerm } from '../../lib/glossary';
+import { getCategoryLabel, glossarySearchText, glossaryTermPath } from '../../lib/glossary';
+
+interface Props {
+	term: GlossaryTerm;
+}
+
+const { term } = Astro.props;
+---
+
+<li data-glossary-card data-glossary-text={glossarySearchText(term)}>
+	<a class="glossary-card" href={glossaryTermPath(term.id)}>
+		<h2 class="glossary-card__term">{term.term}</h2>
+		<ul class="glossary-card__badges">
+			{
+				term.categories.map((category) => (
+					<li>
+						<span class="category-badge">{getCategoryLabel(category)}</span>
+					</li>
+				))
+			}
+		</ul>
+		<p class="glossary-card__explanation">{term.explanation}</p>
+	</a>
+</li>

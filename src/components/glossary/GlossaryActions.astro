@@ -1,0 +1,185 @@
+---
+import type { GlossaryTerm } from '../../lib/glossary';
+import { getCanonicalUrl } from '../../lib/seo';
+import { glossaryTermPath } from '../../lib/glossary';
+
+interface Props {
+	term: GlossaryTerm;
+}
+
+const { term } = Astro.props;
+const url = getCanonicalUrl(glossaryTermPath(term.id));
+const definitionText = `${term.term} — ${term.explanation}\n\n${url}`;
+---
+
+<div class="glossary-actions">
+	<button class="glossary-actions__button" type="button" data-glossary-copy="link" data-label="Copy link" data-copy={url}>
+		Copy link
+	</button>
+	<button
+		class="glossary-actions__button"
+		type="button"
+		data-glossary-copy="definition"
+		data-label="Copy definition"
+		data-copy={definitionText}
+	>
+		Copy definition
+	</button>
+	<button
+		class="glossary-actions__button"
+		type="button"
+		data-glossary-image
+		data-label="Create image"
+		data-term={term.term}
+		data-explanation={term.explanation}
+		data-slug={term.id}
+	>
+		Create image
+	</button>
+</div>
+
+<script>
+	const CARD_WIDTH = 800;
+	const CARD_PADDING = 48;
+	const SCALE = 2;
+	const CREAM = '#f9f7f2';
+	const INK = '#1b1a1b';
+
+	function flashLabel(button: HTMLButtonElement, message: string) {
+		const label = button.dataset.label ?? '';
+		button.textContent = message;
+		window.setTimeout(() => {
+			if (button.textContent === message) {
+				button.textContent = label;
+			}
+		}, 1000);
+	}
+
+	function wrapLines(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
+		const words = text.split(/\s+/).filter(Boolean);
+		const lines: string[] = [];
+		let line = '';
+
+		for (const word of words) {
+			const next = line ? `${line} ${word}` : word;
+			if (ctx.measureText(next).width > maxWidth && line) {
+				lines.push(line);
+				line = word;
+			} else {
+				line = next;
+			}
+		}
+
+		if (line) {
+			lines.push(line);
+		}
+
+		return lines;
+	}
+
+	async function downloadTermImage(term: string, explanation: string, slug: string) {
+		await document.fonts.ready;
+
+		const measure = document.createElement('canvas').getContext('2d');
+		if (!measure) {
+			throw new Error('Canvas is unavailable');
+		}
+
+		const maxWidth = CARD_WIDTH - CARD_PADDING * 2;
+		measure.font = '800 36px "Bricolage Grotesque", sans-serif';
+		const titleLines = wrapLines(measure, term, maxWidth);
+		measure.font = '500 20px "Bricolage Grotesque", sans-serif';
+		const bodyLines = wrapLines(measure, explanation, maxWidth);
+
+		const titleLineHeight = 44;
+		const bodyLineHeight = 30;
+		const height =
+			CARD_PADDING +
+			titleLines.length * titleLineHeight +
+			28 +
+			bodyLines.length * bodyLineHeight +
+			88 +
+			CARD_PADDING;
+
+		const canvas = document.createElement('canvas');
+		canvas.width = CARD_WIDTH * SCALE;
+		canvas.height = height * SCALE;
+		const ctx = canvas.getContext('2d');
+		if (!ctx) {
+			throw new Error('Canvas is unavailable');
+		}
+
+		ctx.scale(SCALE, SCALE);
+		ctx.fillStyle = CREAM;
+		ctx.fillRect(0, 0, CARD_WIDTH, height);
+
+		ctx.fillStyle = INK;
+		ctx.textBaseline = 'top';
+		ctx.font = '800 36px "Bricolage Grotesque", sans-serif';
+		let y = CARD_PADDING;
+		for (const line of titleLines) {
+			ctx.fillText(line, CARD_PADDING, y);
+			y += titleLineHeight;
+		}
+
+		y += 12;
+		ctx.font = '500 20px "Bricolage Grotesque", sans-serif';
+		for (const line of bodyLines) {
+			ctx.fillText(line, CARD_PADDING, y);
+			y += bodyLineHeight;
+		}
+
+		const footerTop = height - CARD_PADDING - 36;
+		ctx.strokeStyle = 'rgba(27, 26, 27, 0.15)';
+		ctx.lineWidth = 1;
+		ctx.beginPath();
+		ctx.moveTo(CARD_PADDING, footerTop);
+		ctx.lineTo(CARD_WIDTH - CARD_PADDING, footerTop);
+		ctx.stroke();
+
+		ctx.fillStyle = INK;
+		ctx.font = '16px "Share Tech Mono", monospace';
+		ctx.fillText('lostcause.dev', CARD_PADDING, footerTop + 16);
+
+		const blob = await new Promise<Blob | null>((resolve) => {
+			canvas.toBlob(resolve, 'image/png');
+		});
+		if (!blob) {
+			throw new Error('Could not encode image');
+		}
+
+		const objectUrl = URL.createObjectURL(blob);
+		const link = document.createElement('a');
+		link.href = objectUrl;
+		link.download = `${slug}-lostcause.png`;
+		link.click();
+		URL.revokeObjectURL(objectUrl);
+	}
+
+	document.querySelectorAll<HTMLButtonElement>('[data-glossary-copy]').forEach((button) => {
+		button.addEventListener('click', async () => {
+			const text = button.dataset.copy ?? '';
+			try {
+				await navigator.clipboard.writeText(text);
+				flashLabel(button, 'Copied');
+			} catch {
+				flashLabel(button, "Couldn't copy");
+			}
+		});
+	});
+
+	document.querySelectorAll<HTMLButtonElement>('[data-glossary-image]').forEach((button) => {
+		button.addEventListener('click', async () => {
+			const term = button.dataset.term ?? '';
+			const explanation = button.dataset.explanation ?? '';
+			const slug = button.dataset.slug ?? 'term';
+			button.textContent = 'Downloading…';
+			try {
+				await downloadTermImage(term, explanation, slug);
+				flashLabel(button, 'Saved');
+			} catch {
+				flashLabel(button, "Couldn't create image");
+			}
+		});
+	});
+</script>
