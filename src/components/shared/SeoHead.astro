@@ -17,6 +17,7 @@ const {
 	categories = [],
 	keywords,
 	noIndex = false,
+	jsonLd: jsonLdOverride,
 } = Astro.props;
 
 const pathname = canonicalPath ?? Astro.url.pathname;
@@ -29,8 +30,8 @@ const twitterHandle = SITE.twitterUrl.replace('https://x.com/', '@');
 const metaKeywords = [...(keywords ?? SITE.keywords), ...categories];
 const keywordsContent = [...new Set(metaKeywords)].join(', ');
 
-const jsonLd =
-	type === 'article'
+const jsonLd = jsonLdOverride ??
+	(type === 'article'
 		? {
 				'@context': 'https://schema.org',
 				'@type': 'BlogPosting',
@@ -56,7 +57,7 @@ const jsonLd =
 				description: SITE.description,
 				url: SITE.url,
 				keywords: keywordsContent,
-			};
+			});
 ---
 
 <meta charset="utf-8" />

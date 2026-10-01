@@ -1,0 +1,37 @@
+---
+import {
+	GLOSSARY_INDEX_PATH,
+	getUsedCategories,
+	glossaryCategoryPath,
+} from '../../lib/glossary';
+
+interface Props {
+	activeCategoryId?: string;
+}
+
+const { activeCategoryId } = Astro.props;
+const categories = getUsedCategories();
+---
+
+<nav class="tools-jump-nav" aria-label="Glossary categories">
+	<label class="tools-jump-nav__label" for="glossary-jump-select">Category</label>
+	<select id="glossary-jump-select" class="tools-jump-nav__select" data-glossary-jump>
+		<option value={GLOSSARY_INDEX_PATH} selected={!activeCategoryId}>All terms</option>
+		{
+			categories.map((category) => (
+				<option value={glossaryCategoryPath(category.id)} selected={activeCategoryId === category.id}>
+					{category.label}
+				</option>
+			))
+		}
+	</select>
+</nav>
+
+<script>
+	const select = document.querySelector<HTMLSelectElement>('[data-glossary-jump]');
+	select?.addEventListener('change', () => {
+		if (select.value) {
+			window.location.assign(select.value);
+		}
+	});
+</script>

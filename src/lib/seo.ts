@@ -16,6 +16,8 @@ export type SeoData = {
 	/** Overrides the default site-wide keywords. */
 	keywords?: string[];
 	noIndex?: boolean;
+	/** Replaces the default WebSite or BlogPosting JSON-LD graph. */
+	jsonLd?: object;
 };
 
 export function getCanonicalUrl(pathname: string): string {

@@ -1,0 +1,96 @@
+---
+import type { BreadcrumbItem } from '../../lib/breadcrumbs';
+import type { GlossaryTerm } from '../../lib/glossary';
+import type { SeoData } from '../../lib/seo';
+import ToolsLayout from '../layout/ToolsLayout.astro';
+import Breadcrumbs from '../shared/Breadcrumbs.astro';
+import GlossaryCard from './GlossaryCard.astro';
+import GlossaryJumpNav from './GlossaryJumpNav.astro';
+import GlossarySidebar from './GlossarySidebar.astro';
+
+interface Props {
+	seo: SeoData;
+	title: string;
+	description: string;
+	terms: GlossaryTerm[];
+	activeCategoryId?: string;
+	breadcrumbs?: BreadcrumbItem[];
+}
+
+const { seo, title, description, terms, activeCategoryId, breadcrumbs } = Astro.props;
+---
+
+<ToolsLayout seo={seo}>
+	<GlossarySidebar slot="sidebar" activeCategoryId={activeCategoryId} />
+
+	<section class="page-section glossary-page">
+		{breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
+		<h1 class="page-section__title">{title}</h1>
+		<p class="page-section__description">{description}</p>
+
+		<GlossaryJumpNav activeCategoryId={activeCategoryId} />
+
+		<label class="glossary-search" for="glossary-search">
+			<span class="glossary-search__label">Search</span>
+			<input
+				id="glossary-search"
+				class="glossary-search__input"
+				type="search"
+				placeholder="Search terms"
+				autocomplete="off"
+				data-glossary-search
+			/>
+		</label>
+
+		<ul class="glossary-list">
+			{terms.map((term) => <GlossaryCard term={term} />)}
+		</ul>
+		<p class="glossary-empty" data-glossary-empty hidden>No matching terms.</p>
+	</section>
+</ToolsLayout>
+
+<script>
+	function normalize(value: string): string {
+		return value.toLowerCase().trim();
+	}
+
+	function applyFilter(query: string) {
+		const cards = document.querySelectorAll<HTMLElement>('[data-glossary-card]');
+		const empty = document.querySelector<HTMLElement>('[data-glossary-empty]');
+		let visible = 0;
+
+		cards.forEach((card) => {
+			const haystack = card.dataset.glossaryText ?? '';
+			const matches = haystack.includes(query);
+			card.hidden = !matches;
+			if (matches) {
+				visible += 1;
+			}
+		});
+
+		if (empty) {
+			empty.hidden = visible !== 0;
+		}
+	}
+
+	const input = document.querySelector<HTMLInputElement>('[data-glossary-search]');
+	if (input) {
+		const initial = new URLSearchParams(window.location.search).get('q') ?? '';
+		input.value = initial;
+		applyFilter(normalize(initial));
+
+		input.addEventListener('input', () => {
+			const query = normalize(input.value);
+			applyFilter(query);
+
+			const url = new URL(window.location.href);
+			const trimmed = input.value.trim();
+			if (trimmed) {
+				url.searchParams.set('q', trimmed);
+			} else {
+				url.searchParams.delete('q');
+			}
+			history.replaceState(null, '', url);
+		});
+	}
+</script>

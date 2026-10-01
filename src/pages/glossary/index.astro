@@ -1,0 +1,24 @@
+---
+import GlossaryBrowser from '../../components/glossary/GlossaryBrowser.astro';
+import {
+	GLOSSARY_INDEX_DESCRIPTION,
+	GLOSSARY_INDEX_PATH,
+	getGlossaryTerms,
+	glossaryIndexJsonLd,
+} from '../../lib/glossary';
+
+const terms = getGlossaryTerms();
+---
+
+<GlossaryBrowser
+	seo={{
+		title: 'Glossary',
+		description: GLOSSARY_INDEX_DESCRIPTION,
+		canonicalPath: GLOSSARY_INDEX_PATH,
+		keywords: ['glossary', 'tech terms', 'definitions'],
+		jsonLd: glossaryIndexJsonLd(terms),
+	}}
+	title="Glossary"
+	description={GLOSSARY_INDEX_DESCRIPTION}
+	terms={terms}
+/>

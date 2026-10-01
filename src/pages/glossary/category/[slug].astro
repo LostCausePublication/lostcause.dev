@@ -1,0 +1,39 @@
+---
+import GlossaryBrowser from '../../../components/glossary/GlossaryBrowser.astro';
+import {
+	categoryDescription,
+	getTermsByCategory,
+	getUsedCategories,
+	glossaryCategoryJsonLd,
+	glossaryCategoryPath,
+} from '../../../lib/glossary';
+
+export function getStaticPaths() {
+	return getUsedCategories().map((category) => ({
+		params: { slug: category.id },
+		props: { category },
+	}));
+}
+
+const { category } = Astro.props;
+const terms = getTermsByCategory(category.id);
+const description = categoryDescription(category.label);
+---
+
+<GlossaryBrowser
+	seo={{
+		title: category.label,
+		description,
+		canonicalPath: glossaryCategoryPath(category.id),
+		keywords: [category.label, 'glossary', 'tech terms'],
+		jsonLd: glossaryCategoryJsonLd(category, terms),
+	}}
+	title={category.label}
+	description={`${description} ${category.count} ${category.count === 1 ? 'term' : 'terms'}.`}
+	terms={terms}
+	activeCategoryId={category.id}
+	breadcrumbs={[
+		{ label: 'Glossary', href: '/glossary/' },
+		{ label: category.label },
+	]}
+/>

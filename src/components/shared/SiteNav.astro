@@ -8,7 +8,7 @@ const currentPath = Astro.url.pathname;
 	{
 		NAV_LINKS.map(({ href, label }) => {
 			const isActive =
-				href === '/' ? currentPath === '/' : currentPath === href || currentPath.startsWith(`${href}/`);
+				href === '/' ? currentPath === '/' : currentPath === href || currentPath.startsWith(href);
 
 			return (
 				<a class:list={['site-nav__link', isActive && 'site-nav__link--active']} href={href}>
