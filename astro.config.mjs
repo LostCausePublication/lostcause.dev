@@ -6,11 +6,12 @@ import sitemap from '@astrojs/sitemap';
 import expressiveCode from 'astro-expressive-code';
 import { remarkCodeFrameNone } from './src/integrations/remark-code-frame-none.ts';
 import { remarkBlogImages } from './src/integrations/remark-blog-images.ts';
+import { llmsTxt } from './src/integrations/llms-txt.ts';
 
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://lostcause.dev',
-	integrations: [expressiveCode(), mdx(), sitemap()],
+	integrations: [expressiveCode(), mdx(), sitemap(), llmsTxt()],
 	build: {
 		inlineStylesheets: 'always',
 	},
