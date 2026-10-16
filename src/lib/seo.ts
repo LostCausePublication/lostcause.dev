@@ -18,6 +18,8 @@ export type SeoData = {
 	noIndex?: boolean;
 	/** Replaces the default WebSite or BlogPosting JSON-LD graph. */
 	jsonLd?: object;
+	/** Path to the Markdown mirror, e.g. `/blog/my-post/index.md`. */
+	markdownPath?: string;
 };
 
 export function getCanonicalUrl(pathname: string): string {

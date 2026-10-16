@@ -36,6 +36,7 @@ const ogImageUrl = getPostOgImageUrl(ogImagePath);
 		title: post.data.title,
 		description: post.data.description,
         canonicalPath: `/blog/${slug}/`,
+		markdownPath: `/blog/${slug}/index.md`,
 		image: ogImageUrl,
 		imageAlt: post.data.ogImageAlt ?? post.data.title,
 		type: 'article',
