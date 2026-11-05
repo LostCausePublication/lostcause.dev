@@ -30,3 +30,20 @@
 	font-size: 0.8125rem;
 	color: rgba($color-primary, 0.7);
 }
+
+.post-comments {
+	margin-top: 2.5rem;
+}
+
+.post-comments__title {
+	margin-bottom: 1rem;
+	font-family: $font-sans;
+	font-size: 1.5rem;
+	font-weight: 800;
+	line-height: 1.25;
+}
+
+.post-comments .giscus,
+.post-comments .giscus-frame {
+	width: 100%;
+}
