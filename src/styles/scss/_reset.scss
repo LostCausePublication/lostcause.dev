@@ -8,12 +8,14 @@
 	padding: 0;
 }
 
-html,
-body {
+html {
 	height: 100%;
 }
 
 body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100%;
 	background-color: $color-background;
 	color: $color-primary;
 	font-family: $font-sans;
@@ -28,4 +30,22 @@ img {
 
 a {
 	color: inherit;
+}
+
+:focus-visible {
+	outline: 2px solid $color-accent;
+	outline-offset: 2px;
+}
+
+.visually-hidden {
+	@include visually-hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
 }

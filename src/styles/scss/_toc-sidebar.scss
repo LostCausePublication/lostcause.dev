@@ -1,10 +1,7 @@
 @use 'variables' as *;
 
-.page--post {
-	.page-header--wide,
-	.post-layout {
-		max-width: 72rem;
-	}
+.page--post .post-layout {
+	max-width: 72rem;
 }
 
 .post-layout {
@@ -27,7 +24,7 @@
 	position: sticky;
 	top: 2rem;
 	padding: 1rem;
-	border: 1px solid rgba($color-primary, 0.15);
+	border: 1px solid fade($color-primary, 0.15);
 	background-color: $color-white;
 }
 

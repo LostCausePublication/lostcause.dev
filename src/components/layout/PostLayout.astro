@@ -1,7 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import SiteNav from '../shared/SiteNav.astro';
-import Logo from '../shared/Logo.astro';
+import SiteHeader from '../shared/SiteHeader.astro';
 import Footer from '../shared/Footer.astro';
 import Breadcrumbs from '../shared/Breadcrumbs.astro';
 import TableOfContents from '../blog/TableOfContents.astro';
@@ -21,12 +20,8 @@ const hasToc = tocHeadings.length > 0;
 ---
 
 <BaseLayout seo={seo}>
-	<main class:list={['page', 'page--post', hasToc && 'page--post-with-toc']}>
-		<header class="page-header page-header--wide">
-			<Logo />
-			<SiteNav />
-		</header>
-
+	<SiteHeader />
+	<main id="main" tabindex="-1" class:list={['page', 'page--post', hasToc && 'page--post-with-toc']}>
 		<div class:list={['post-layout', hasToc && 'post-layout--with-toc']}>
 			<div class="post-layout__main">
 				{breadcrumbs && <Breadcrumbs items={breadcrumbs} />}

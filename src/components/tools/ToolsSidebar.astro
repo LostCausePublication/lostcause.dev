@@ -16,26 +16,24 @@ const visibleGroups = TOOL_CATEGORY_GROUPS.map((group) => ({
 ---
 
 <nav class="tools-sidebar" aria-label="Tool categories">
-	{visibleGroups.map((group) => (
-		<div class="tools-sidebar__group">
-			<p class="tools-sidebar__group-label">
-				<ToolsCategoryIcon icon={group.icon} />
-				<span>{group.label}</span>
-			</p>
-			<ul class="tools-sidebar__list">
-				{group.subcategories.map((subcategory) => (
-					<li>
-						<a
-							class="tools-sidebar__link"
-							href={`#${subcategory.id}`}
-							data-tools-category={subcategory.id}
-						>
-							<ToolsCategoryIcon icon={subcategory.icon} />
-							<span>{subcategory.label}</span>
-						</a>
-					</li>
-				))}
-			</ul>
-		</div>
-	))}
+	{
+		visibleGroups.map((group) => (
+			<div class="page-aside__section">
+				<h2 class="page-aside__title">
+					<ToolsCategoryIcon icon={group.icon} />
+					<span>{group.label}</span>
+				</h2>
+				<ul class="tools-sidebar__list">
+					{group.subcategories.map((subcategory) => (
+						<li>
+							<a class="tools-sidebar__link" href={`#${subcategory.id}`} data-tools-category={subcategory.id}>
+								<ToolsCategoryIcon icon={subcategory.icon} />
+								<span>{subcategory.label}</span>
+							</a>
+						</li>
+					))}
+				</ul>
+			</div>
+		))
+	}
 </nav>

@@ -1,0 +1,15 @@
+---
+import TopicsList from './TopicsList.astro';
+import AuthorsStrip from './AuthorsStrip.astro';
+import ExploreLinks from './ExploreLinks.astro';
+
+interface Props {
+	activeCategorySlug?: string;
+}
+
+const { activeCategorySlug } = Astro.props;
+---
+
+<TopicsList activeSlug={activeCategorySlug} />
+<AuthorsStrip />
+<ExploreLinks />

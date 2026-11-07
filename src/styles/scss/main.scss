@@ -1,8 +1,11 @@
 @use 'variables' as *;
+@use 'theme';
 @use 'reset';
 @use 'layout';
 @use 'navigation';
+@use 'hero';
 @use 'home';
+@use 'sidebar';
 @use 'footer';
 @use 'post-card';
 @use 'blog-post';
@@ -13,5 +16,4 @@
 @use 'toc-sidebar';
 @use 'breadcrumbs';
 @use 'blog-image';
-@use 'blog-categories';
 @use 'expressive-code';

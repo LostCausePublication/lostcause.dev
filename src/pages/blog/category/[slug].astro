@@ -1,6 +1,7 @@
 ---
 import PageLayout from '../../../components/layout/PageLayout.astro';
 import PostCard from '../../../components/blog/PostCard.astro';
+import BlogSidebar from '../../../components/sidebar/BlogSidebar.astro';
 import { getCategoryStats, getPostsByCategory } from '../../../lib/categories';
 export async function getStaticPaths() {
 	const categories = await getCategoryStats();
@@ -25,7 +26,9 @@ const posts = await getPostsByCategory(category.slug);
         { label: 'Blog', href: '/blog/' },
 		{ label: category.name },
 	]}
+	sidebarLabel="Browse the blog"
 >
+	<BlogSidebar slot="sidebar" activeCategorySlug={category.slug} />
 	<section class="page-section">
 		<h1 class="page-section__title">{category.name}</h1>
 		<p class="page-section__description">

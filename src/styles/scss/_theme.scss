@@ -1,0 +1,35 @@
+@mixin dark-tokens {
+	color-scheme: dark;
+	--color-fg: #f9f7f2;
+	--color-bg: #151415;
+	--color-surface: #1f1e1f;
+	--color-accent: #ff4d52;
+	--color-on-accent: #151415;
+	--color-on-inverse: #151415;
+	--color-footer-bg: #0e0d0e;
+}
+
+:root {
+	color-scheme: light;
+	--color-fg: #1b1a1b;
+	--color-bg: #f9f7f2;
+	--color-surface: #fff;
+	--color-accent: #e11218;
+	--color-on-accent: #fff;
+	--color-on-inverse: #fff;
+	--color-muted: color-mix(in srgb, var(--color-fg) 75%, transparent);
+	--color-border: color-mix(in srgb, var(--color-fg) 15%, transparent);
+	--color-footer-bg: #1b1a1b;
+	--color-footer-accent: #ff4d52;
+}
+
+:root[data-theme='dark'] {
+	@include dark-tokens;
+}
+
+// Without JS, the theme script never sets data-theme, so follow the system setting.
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme]) {
+		@include dark-tokens;
+	}
+}

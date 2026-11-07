@@ -1,16 +1,17 @@
 import { defineEcConfig } from 'astro-expressive-code';
 
 export default defineEcConfig({
-	themes: ['github-light'],
+	themes: ['github-light', 'github-dark'],
+	themeCssSelector: (theme) => `[data-theme='${theme.type}']`,
 	frames: {
 		extractFileNameFromCode: false,
 		showCopyToClipboardButton: true,
 	},
 	styleOverrides: {
-		borderColor: 'rgba(27, 26, 27, 0.15)',
+		borderColor: 'var(--color-border)',
 		borderRadius: '0',
-		codeFontFamily: "'Share Tech Mono', monospace",
-		uiFontFamily: "'Bricolage Grotesque', sans-serif",
+		codeFontFamily: 'var(--font-share-tech-mono), monospace',
+		uiFontFamily: 'var(--font-bricolage), sans-serif',
 		frames: {
 			shadowColor: 'transparent',
 			frameBoxShadowCssValue: 'none',
