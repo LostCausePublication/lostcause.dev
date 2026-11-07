@@ -2,7 +2,26 @@
 import PageLayout from '../components/layout/PageLayout.astro';
 import Hero from '../components/home/Hero.astro';
 import LatestPosts from '../components/home/LatestPosts.astro';
+import BlogSidebar from '../components/sidebar/BlogSidebar.astro';
+import { getLatestPosts, getPostSlug } from '../lib/blog';
+import { getAuthorsBySlugs } from '../lib/authors';
+import { getHomeJsonLd } from '../lib/seo';
 import { SITE } from '../lib/site';
+
+const latestPosts = await getLatestPosts(4);
+
+const jsonLd = getHomeJsonLd(
+	await Promise.all(
+		latestPosts.map(async (post) => ({
+			title: post.data.title,
+			description: post.data.description,
+			path: `/blog/${getPostSlug(post)}/`,
+			datePublished: post.data.pubDate,
+			dateModified: post.data.updatedDate,
+			authors: (await getAuthorsBySlugs(post.data.authors)).map((author) => author.data.name),
+		})),
+	),
+);
 ---
 
 <PageLayout
@@ -10,9 +29,13 @@ import { SITE } from '../lib/site';
 		title: SITE.name,
 		description: SITE.description,
 		canonicalPath: '/',
+		jsonLd,
 	}}
-	centered
+	sidebarLabel="Browse the publication"
 >
-	<Hero />
-	<LatestPosts />
+	<Hero slot="hero" />
+	<div class="home-sections">
+		<LatestPosts posts={latestPosts} />
+	</div>
+	<BlogSidebar slot="sidebar" />
 </PageLayout>

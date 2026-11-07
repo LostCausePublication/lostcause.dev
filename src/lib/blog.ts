@@ -7,6 +7,11 @@ export async function getPublishedPosts(): Promise<BlogPost[]> {
 	return posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 }
 
+export async function getLatestPosts(limit = 10): Promise<BlogPost[]> {
+	const posts = await getPublishedPosts();
+	return posts.slice(0, limit);
+}
+
 export async function getPostsByAuthor(authorSlug: string): Promise<BlogPost[]> {
 	const posts = await getPublishedPosts();
 	return posts.filter((post) => post.data.authors.includes(authorSlug));
@@ -29,6 +34,14 @@ export function formatDate(date: Date): string {
 	return date.toLocaleDateString('en-US', {
 		year: 'numeric',
 		month: 'long',
+		day: 'numeric',
+	});
+}
+
+export function formatShortDate(date: Date): string {
+	return date.toLocaleDateString('en-US', {
+		year: 'numeric',
+		month: 'short',
 		day: 'numeric',
 	});
 }

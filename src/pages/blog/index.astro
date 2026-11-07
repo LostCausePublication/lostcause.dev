@@ -1,7 +1,7 @@
 ---
 import PageLayout from '../../components/layout/PageLayout.astro';
 import PostCard from '../../components/blog/PostCard.astro';
-import BlogCategoryList from '../../components/blog/BlogCategoryList.astro';
+import BlogSidebar from '../../components/sidebar/BlogSidebar.astro';
 import { getPublishedPosts } from '../../lib/blog';
 
 const posts = await getPublishedPosts();
@@ -12,17 +12,16 @@ const posts = await getPublishedPosts();
 		title: 'Blog',
 		description:
 			'Articles about the JavaScript/TypeScript ecosystem, open-source projects and CLI tools.',
-        canonicalPath: '/blog/',
+		canonicalPath: '/blog/',
 	}}
 	breadcrumbs={[{ label: 'Blog' }]}
+	sidebarLabel="Browse the blog"
 >
 	<section class="page-section">
 		<h1 class="page-section__title">Blog</h1>
 		<p class="page-section__description">
 			The JavaScript/TypeScript ecosystem, open-source projects and CLI tools, for the joy of coding.
 		</p>
-
-		<BlogCategoryList />
 
 		{
 			posts.length > 0 ? (
@@ -38,4 +37,6 @@ const posts = await getPublishedPosts();
 			)
 		}
 	</section>
+
+	<BlogSidebar slot="sidebar" />
 </PageLayout>

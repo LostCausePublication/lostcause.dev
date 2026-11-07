@@ -1,0 +1,41 @@
+---
+import { GLOSSARY_INDEX_PATH, getGlossaryTerms } from '../../lib/glossary';
+import { getAllTools } from '../../lib/tools';
+
+const termCount = getGlossaryTerms().length;
+const toolCount = (await getAllTools()).length;
+
+const links = [
+	{
+		href: GLOSSARY_INDEX_PATH,
+		title: 'Glossary',
+		count: `${termCount} terms`,
+		text: 'Plain-language definitions of common tech terms.',
+	},
+	{
+		href: '/tools/',
+		title: 'Tools',
+		count: `${toolCount} tools`,
+		text: 'A curated list of useful mini tools.',
+	},
+];
+---
+
+<section class="page-aside__section" aria-labelledby="explore-heading">
+	<h2 id="explore-heading" class="page-aside__title">Explore</h2>
+	<ul class="explore-list">
+		{
+			links.map((link) => (
+				<li>
+					<a class="explore-card" href={link.href}>
+						<span class="explore-card__header">
+							<span class="explore-card__title">{link.title}</span>
+							<span class="explore-card__count">{link.count}</span>
+						</span>
+						<span class="explore-card__text">{link.text}</span>
+					</a>
+				</li>
+			))
+		}
+	</ul>
+</section>

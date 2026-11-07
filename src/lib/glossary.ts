@@ -46,6 +46,12 @@ export function getGlossaryTerms(): GlossaryTerm[] {
 	return [...glossaryTerms].sort((a, b) => a.term.localeCompare(b.term, 'en', { sensitivity: 'base' }));
 }
 
+/** Terms most recently appended to the glossary data, newest first. */
+export function getLatestGlossaryTerms(limit = 3): GlossaryTerm[] {
+	if (limit <= 0) return [];
+	return glossaryTerms.slice(-limit).reverse();
+}
+
 export function getGlossaryTerm(id: string): GlossaryTerm | undefined {
 	return glossaryTerms.find((term) => term.id === id);
 }

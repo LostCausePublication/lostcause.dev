@@ -2,8 +2,7 @@
 import type { BreadcrumbItem } from '../../lib/breadcrumbs';
 import type { GlossaryTerm } from '../../lib/glossary';
 import type { SeoData } from '../../lib/seo';
-import ToolsLayout from '../layout/ToolsLayout.astro';
-import Breadcrumbs from '../shared/Breadcrumbs.astro';
+import PageLayout from '../layout/PageLayout.astro';
 import GlossaryCard from './GlossaryCard.astro';
 import GlossaryJumpNav from './GlossaryJumpNav.astro';
 import GlossarySidebar from './GlossarySidebar.astro';
@@ -20,11 +19,8 @@ interface Props {
 const { seo, title, description, terms, activeCategoryId, breadcrumbs } = Astro.props;
 ---
 
-<ToolsLayout seo={seo}>
-	<GlossarySidebar slot="sidebar" activeCategoryId={activeCategoryId} />
-
+<PageLayout seo={seo} breadcrumbs={breadcrumbs} sidebarLabel="Glossary categories" hideSidebarOnMobile>
 	<section class="page-section glossary-page">
-		{breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
 		<h1 class="page-section__title">{title}</h1>
 		<p class="page-section__description">{description}</p>
 
@@ -47,7 +43,9 @@ const { seo, title, description, terms, activeCategoryId, breadcrumbs } = Astro.
 		</ul>
 		<p class="glossary-empty" data-glossary-empty hidden>No matching terms.</p>
 	</section>
-</ToolsLayout>
+
+	<GlossarySidebar slot="sidebar" activeCategoryId={activeCategoryId} />
+</PageLayout>
 
 <script>
 	function normalize(value: string): string {

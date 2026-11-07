@@ -1,0 +1,50 @@
+---
+import AuthorAvatar from '../author/AuthorAvatar.astro';
+import { getAllAuthors, getAuthorSlug } from '../../lib/authors';
+import { getAuthorPostCounts } from '../../lib/blog';
+
+const MAX_AUTHORS = 5;
+
+const counts = await getAuthorPostCounts();
+const authors = (await getAllAuthors())
+	.map((author) => ({ author, slug: getAuthorSlug(author) }))
+	.map((entry) => ({ ...entry, count: counts.get(entry.slug) ?? 0 }))
+	.sort((a, b) => b.count - a.count || a.author.data.name.localeCompare(b.author.data.name));
+const visibleAuthors = authors.slice(0, MAX_AUTHORS);
+---
+
+{
+	visibleAuthors.length > 0 && (
+		<section class="page-aside__section" aria-labelledby="authors-heading">
+			<h2 id="authors-heading" class="page-aside__title">
+				Authors
+			</h2>
+			<ul class="author-strip">
+				{visibleAuthors.map(({ author, slug, count }) => (
+					<li>
+						<a class="author-strip__link" href={`/authors/${slug}/`}>
+							<AuthorAvatar
+								filename={author.data.avatar}
+								name={author.data.name}
+								size="xs"
+								rounded
+								decorative
+							/>
+							<span class="author-strip__text">
+								<span class="author-strip__name">{author.data.name}</span>
+								<span class="author-strip__count">
+									{count} {count === 1 ? 'post' : 'posts'}
+								</span>
+							</span>
+						</a>
+					</li>
+				))}
+			</ul>
+			{authors.length > MAX_AUTHORS && (
+				<a class="more-link" href="/authors/">
+					All authors<span aria-hidden="true"> &rarr;</span>
+				</a>
+			)}
+		</section>
+	)
+}

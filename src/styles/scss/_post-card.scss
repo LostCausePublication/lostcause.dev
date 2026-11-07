@@ -2,7 +2,7 @@
 
 .post-card {
 	padding: 1.25rem;
-	border: 1px solid rgba($color-primary, 0.15);
+	border: 1px solid fade($color-primary, 0.15);
 	background-color: $color-white;
 }
 
@@ -49,12 +49,17 @@
 }
 
 .category-badge {
-	display: inline-block;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	min-height: 1.5rem;
 	padding: 0.2rem 0.5rem;
 	border: 1px solid $color-primary;
+	background-color: $color-white;
 	color: $color-primary;
 	font-family: $font-mono;
 	font-size: 0.75rem;
+	line-height: 1.2;
 	letter-spacing: 0.06em;
 	text-decoration: none;
 	text-transform: uppercase;
@@ -62,11 +67,19 @@
 		color 0.15s ease,
 		border-color 0.15s ease;
 
-	&:hover,
-	&:focus-visible {
+	&:is(a):hover,
+	&:is(a):focus-visible,
+	&[aria-current] {
 		border-color: $color-accent;
 		color: $color-accent;
 	}
+}
+
+.category-badge__count {
+	padding: 0 0.3rem;
+	background-color: fade($color-primary, 0.08);
+	color: $color-primary;
+	font-size: 0.6875rem;
 }
 
 .post-meta {
@@ -80,7 +93,7 @@
 }
 
 .post-meta__date {
-	color: rgba($color-primary, 0.75);
+	color: fade($color-primary, 0.75);
 }
 
 .author-links {
@@ -91,7 +104,7 @@
 }
 
 .author-links__label {
-	color: rgba($color-primary, 0.75);
+	color: fade($color-primary, 0.75);
 }
 
 .author-links__name {
@@ -106,7 +119,7 @@
 
 .author-links__separator {
 	margin-right: 0.25rem;
-	color: rgba($color-primary, 0.75);
+	color: fade($color-primary, 0.75);
 }
 
 .tag-list {
@@ -119,7 +132,7 @@
 
 .tag-list__item {
 	padding: 0.2rem 0.5rem;
-	background-color: rgba($color-primary, 0.08);
+	background-color: fade($color-primary, 0.08);
 	font-family: $font-mono;
 	font-size: 0.75rem;
 }

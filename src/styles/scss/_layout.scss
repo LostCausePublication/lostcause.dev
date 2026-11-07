@@ -1,32 +1,65 @@
 @use 'variables' as *;
 
+:root {
+	--page-gutter: 1.25rem;
+
+	@media (min-width: 48rem) {
+		--page-gutter: 2rem;
+	}
+}
+
+.skip-link {
+	position: absolute;
+	top: 0.5rem;
+	left: 0.5rem;
+	z-index: 100;
+	padding: 0.75rem 1rem;
+	background-color: $color-primary;
+	color: $color-on-inverse;
+	font-family: $font-mono;
+	font-size: 0.875rem;
+	text-decoration: none;
+	transform: translateY(-200%);
+
+	&:focus {
+		transform: none;
+	}
+}
+
 .page {
 	display: flex;
+	flex: 1;
 	flex-direction: column;
 	align-items: center;
-	min-height: 100%;
-	padding: 2rem 1.5rem;
-}
-
-.page--centered {
-	justify-content: space-between;
-	padding-bottom: 2rem;
-}
-
-.page-header {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 1.5rem;
 	width: 100%;
-	max-width: 52rem;
-	margin-bottom: 2.5rem;
+	padding: 2.5rem var(--page-gutter) 2rem;
+
+	&:focus {
+		outline: none;
+	}
 }
 
 .page-content {
 	width: 100%;
-	max-width: 52rem;
+	max-width: $container-max;
 	flex: 1;
+}
+
+// Main column + right sidebar. Single-column pages keep the same main column width
+// so every page lines up with the header.
+.page-grid {
+	display: grid;
+	gap: 3rem;
+
+	@media (min-width: $breakpoint-wide) {
+		grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+		gap: 4rem;
+		align-items: start;
+	}
+}
+
+.page-grid__main {
+	min-width: 0;
 }
 
 .page-section {
@@ -47,4 +80,28 @@
 	font-size: 1rem;
 	font-weight: 500;
 	line-height: 1.5;
+}
+
+.section-title {
+	margin-bottom: 1.25rem;
+	font-family: $font-sans;
+	font-size: 1.5rem;
+	font-weight: 800;
+	line-height: 1.2;
+}
+
+.more-link {
+	@include tap-target;
+	justify-content: flex-start;
+	margin-top: 0.75rem;
+	padding-inline: 0.25rem;
+	color: $color-accent;
+	font-family: $font-mono;
+	font-size: 0.875rem;
+	text-decoration: none;
+
+	&:hover,
+	&:focus-visible {
+		text-decoration: underline;
+	}
 }

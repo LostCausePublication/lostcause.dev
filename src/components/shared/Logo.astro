@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import avatar from '../../assets/avatar.png';
 
 interface Props {
@@ -9,13 +10,7 @@ const { href = '/' } = Astro.props;
 ---
 
 <a class="logo" href={href}>
-	<img
-		class="logo__avatar"
-		src={avatar.src}
-		width={avatar.width}
-		height={avatar.height}
-		alt="Lost Cause Publication logo"
-	/>
+	<Image class="logo__avatar" src={avatar} width={40} height={40} densities={[1, 2]} alt="" loading="eager" />
 	<span class="logo__text">
 		<span class="logo__primary">LOSTCAUSE.</span><span class="logo__accent">DEV</span>
 	</span>

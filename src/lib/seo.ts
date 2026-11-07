@@ -42,4 +42,64 @@ export function getPageTitle(title: string): string {
 	return `${title.slice(0, maxTitleLength).trimEnd()}…${SITE_TITLE_SUFFIX}`;
 }
 
+export type HomeJsonLdPost = {
+	title: string;
+	description: string;
+	path: string;
+	datePublished: Date;
+	dateModified?: Date;
+	authors: string[];
+};
+
+export function getHomeJsonLd(posts: HomeJsonLdPost[]): object {
+	const websiteId = `${SITE.url}/#website`;
+	const organizationId = `${SITE.url}/#organization`;
+
+	return {
+		'@context': 'https://schema.org',
+		'@graph': [
+			{
+				'@type': 'WebSite',
+				'@id': websiteId,
+				name: SITE.name,
+				description: SITE.description,
+				url: SITE.url,
+				inLanguage: 'en-US',
+				publisher: { '@id': organizationId },
+			},
+			{
+				'@type': 'Organization',
+				'@id': organizationId,
+				name: SITE.name,
+				url: SITE.url,
+				logo: {
+					'@type': 'ImageObject',
+					url: getCanonicalUrl('/android-chrome-512x512.png'),
+					width: 512,
+					height: 512,
+				},
+				sameAs: [SITE.githubUrl, SITE.twitterUrl],
+			},
+			{
+				'@type': 'Blog',
+				'@id': `${SITE.url}/#blog`,
+				name: SITE.name,
+				description: SITE.description,
+				url: getCanonicalUrl('/blog/'),
+				isPartOf: { '@id': websiteId },
+				publisher: { '@id': organizationId },
+				blogPost: posts.map((post) => ({
+					'@type': 'BlogPosting',
+					headline: post.title,
+					description: post.description,
+					url: getCanonicalUrl(post.path),
+					datePublished: post.datePublished.toISOString(),
+					dateModified: (post.dateModified ?? post.datePublished).toISOString(),
+					author: post.authors.map((name) => ({ '@type': 'Person', name })),
+				})),
+			},
+		],
+	};
+}
+
 export { getDefaultOgImageUrl } from './og-images';

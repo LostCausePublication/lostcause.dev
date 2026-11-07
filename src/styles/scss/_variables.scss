@@ -1,12 +1,24 @@
-$color-primary: #1b1a1b;
-$color-accent: #e11218;
-$color-background: #f9f7f2;
-$color-white: #fff;
+$color-primary: var(--color-fg);
+$color-accent: var(--color-accent);
+$color-background: var(--color-bg);
+$color-white: var(--color-surface);
+$color-on-accent: var(--color-on-accent);
+$color-on-inverse: var(--color-on-inverse);
+$color-muted: var(--color-muted);
+$color-border: var(--color-border);
 
-$font-sans: 'Bricolage Grotesque', sans-serif;
-$font-mono: 'Share Tech Mono', monospace;
+$font-sans: var(--font-bricolage), sans-serif;
+$font-mono: var(--font-share-tech-mono), monospace;
 
 $tap-target-min: 3rem;
+$breakpoint-wide: 64rem;
+$breakpoint-wide-below: 63.99rem;
+$container-max: 72rem;
+
+/// Translucent version of a (possibly CSS-variable) color.
+@function fade($color, $opacity) {
+	@return color-mix(in srgb, #{$color} #{$opacity * 100%}, transparent);
+}
 
 @mixin tap-target {
 	display: inline-flex;
@@ -14,4 +26,16 @@ $tap-target-min: 3rem;
 	justify-content: center;
 	min-width: $tap-target-min;
 	min-height: $tap-target-min;
+}
+
+@mixin visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+	border: 0;
 }

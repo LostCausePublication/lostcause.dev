@@ -1,0 +1,34 @@
+---
+import CategoryBadge from '../blog/CategoryBadge.astro';
+import { getCategoryStats } from '../../lib/categories';
+
+interface Props {
+	activeSlug?: string;
+}
+
+const { activeSlug } = Astro.props;
+const categories = (await getCategoryStats()).sort(
+	(a, b) => b.count - a.count || a.name.localeCompare(b.name),
+);
+---
+
+{
+	categories.length > 0 && (
+		<section class="page-aside__section" aria-labelledby="topics-heading">
+			<h2 id="topics-heading" class="page-aside__title">
+				Topics
+			</h2>
+			<ul class="category-list">
+				{categories.map((category) => (
+					<li>
+						<CategoryBadge
+							category={category.name}
+							count={category.count}
+							current={category.slug === activeSlug}
+						/>
+					</li>
+				))}
+			</ul>
+		</section>
+	)
+}

@@ -1,5 +1,6 @@
 ---
 import SeoHead from '../shared/SeoHead.astro';
+import ThemeScript from '../shared/ThemeScript.astro';
 import Analytics from '../shared/Analytics.astro';
 import type { SeoData } from '../../lib/seo';
 import '../../styles/scss/main.scss';
@@ -14,6 +15,7 @@ const { seo } = Astro.props;
 <!doctype html>
 <html lang="en">
 	<head>
+		<ThemeScript />
 		<SeoHead {...seo} />
 	</head>
 	<body>
