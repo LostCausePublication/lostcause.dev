@@ -2,17 +2,30 @@
 import PageLayout from '../../components/layout/PageLayout.astro';
 import PostCard from '../../components/blog/PostCard.astro';
 import BlogSidebar from '../../components/sidebar/BlogSidebar.astro';
-import { getPublishedPosts } from '../../lib/blog';
+import { getPostSlug, getPublishedPosts } from '../../lib/blog';
+import { collectionPageJsonLd, getCanonicalUrl } from '../../lib/seo';
 
 const posts = await getPublishedPosts();
+const title = 'Blog';
+const description =
+	'Articles about the JavaScript/TypeScript ecosystem, open-source projects and CLI tools.';
 ---
 
 <PageLayout
 	seo={{
-		title: 'Blog',
-		description:
-			'Articles about the JavaScript/TypeScript ecosystem, open-source projects and CLI tools.',
+		title,
+		description,
 		canonicalPath: '/blog/',
+		jsonLd: collectionPageJsonLd({
+			name: title,
+			description,
+			url: getCanonicalUrl('/blog/'),
+			items: posts.map((post) => ({
+				name: post.data.title,
+				description: post.data.description,
+				url: getCanonicalUrl(`/blog/${getPostSlug(post)}/`),
+			})),
+		}),
 	}}
 	breadcrumbs={[{ label: 'Blog' }]}
 	sidebarLabel="Browse the blog"

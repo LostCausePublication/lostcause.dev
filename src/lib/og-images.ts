@@ -22,17 +22,37 @@ function resolveOgImage(ogImagePath?: string): ImageMetadata {
 	return blogOgImages[normalized]?.default ?? defaultOgImage;
 }
 
-/** Turn an emitted asset path into an absolute URL for social meta tags. */
-function toAbsoluteOgUrl(image: ImageMetadata): string {
-	return new URL(image.src, SITE.url).href;
+export type OgImage = {
+	url: string;
+	width: number;
+	height: number;
+};
+
+/** Turn an emitted asset into an absolute URL plus its intrinsic size. */
+function toOgImage(image: ImageMetadata): OgImage {
+	return {
+		url: new URL(image.src, SITE.url).href,
+		width: image.width,
+		height: image.height,
+	};
+}
+
+/** Default OG image used by every page that does not provide its own. */
+export function getDefaultOgImage(): OgImage {
+	return toOgImage(defaultOgImage);
+}
+
+/** Blog posts: use the `ogImage` frontmatter when set, otherwise the default. */
+export function getPostOgImage(ogImagePath?: string): OgImage {
+	return toOgImage(resolveOgImage(ogImagePath));
 }
 
 /** Default OG image used by every page that does not provide its own. */
 export function getDefaultOgImageUrl(): string {
-	return toAbsoluteOgUrl(defaultOgImage);
+	return getDefaultOgImage().url;
 }
 
 /** Blog posts: use the `ogImage` frontmatter when set, otherwise the default. */
 export function getPostOgImageUrl(ogImagePath?: string): string {
-	return toAbsoluteOgUrl(resolveOgImage(ogImagePath));
+	return getPostOgImage(ogImagePath).url;
 }

@@ -1,0 +1,23 @@
+---
+import PageLayout from '../components/layout/PageLayout.astro';
+
+const description = 'That page does not exist. Browse the blog, glossary, or head back home.';
+---
+
+<PageLayout
+	seo={{
+		title: 'Page not found',
+		description,
+		noIndex: true,
+	}}
+>
+	<section class="page-section">
+		<h1 class="page-section__title">Page not found</h1>
+		<p class="page-section__description">{description}</p>
+		<nav aria-label="Helpful links">
+			<a class="more-link" href="/">Home</a>
+			<a class="more-link" href="/blog/">Blog</a>
+			<a class="more-link" href="/glossary/">Glossary</a>
+		</nav>
+	</section>
+</PageLayout>
