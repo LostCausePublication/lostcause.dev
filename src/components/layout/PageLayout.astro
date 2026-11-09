@@ -1,7 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import SiteNav from '../shared/SiteNav.astro';
-import Logo from '../shared/Logo.astro';
+import SiteHeader from '../shared/SiteHeader.astro';
 import Footer from '../shared/Footer.astro';
 import Breadcrumbs from '../shared/Breadcrumbs.astro';
 import type { BreadcrumbItem } from '../../lib/breadcrumbs';
@@ -9,23 +8,45 @@ import type { SeoData } from '../../lib/seo';
 
 interface Props {
 	seo: SeoData;
-	centered?: boolean;
 	breadcrumbs?: BreadcrumbItem[];
+	/** Accessible name for the sidebar landmark. */
+	sidebarLabel?: string;
+	/** Hide the sidebar below the wide breakpoint (pages that offer a mobile jump nav instead). */
+	hideSidebarOnMobile?: boolean;
 }
 
-const { seo, centered = false, breadcrumbs } = Astro.props;
+const { seo, breadcrumbs, sidebarLabel = 'Sidebar', hideSidebarOnMobile = false } = Astro.props;
+const hasSidebar = Astro.slots.has('sidebar');
+const hasHero = Astro.slots.has('hero');
 ---
 
 <BaseLayout seo={seo}>
-	<main class:list={['page', centered && 'page--centered']}>
-		<header class="page-header">
-			<Logo />
-			<SiteNav />
-		</header>
-
+	<SiteHeader />
+	<main id="main" tabindex="-1" class:list={['page', hasHero && 'page--has-hero']}>
 		<div class="page-content">
-			{breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
-			<slot />
+			{
+				hasHero && (
+					<div class="page-hero">
+						<slot name="hero" />
+					</div>
+				)
+			}
+			<div class:list={['page-grid', !hasSidebar && 'page-grid--single']}>
+				<div class="page-grid__main">
+					{breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
+					<slot />
+				</div>
+				{
+					hasSidebar && (
+						<aside
+							class:list={['page-aside', hideSidebarOnMobile && 'page-aside--wide-only']}
+							aria-label={sidebarLabel}
+						>
+							<slot name="sidebar" />
+						</aside>
+					)
+				}
+			</div>
 		</div>
 	</main>
 	<Footer />

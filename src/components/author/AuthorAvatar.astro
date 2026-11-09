@@ -1,26 +1,42 @@
 ---
+import { Image } from 'astro:assets';
 import { getAuthorAvatar } from '../../lib/avatars';
+
+type Size = 'xs' | 'sm' | 'md' | 'lg';
 
 interface Props {
 	filename?: string;
 	name: string;
 	class?: string;
-	size?: 'sm' | 'md' | 'lg';
+	size?: Size;
 	rounded?: boolean;
+	/** Use when the author's name is rendered next to the avatar. */
+	decorative?: boolean;
 }
 
-const { filename, name, class: className, size = 'md', rounded = false } = Astro.props;
+const SIZE_PX: Record<Size, number> = { xs: 40, sm: 48, md: 72, lg: 120 };
+
+const {
+	filename,
+	name,
+	class: className,
+	size = 'md',
+	rounded = false,
+	decorative = false,
+} = Astro.props;
 const image = filename ? getAuthorAvatar(filename) : null;
+const px = SIZE_PX[size];
 ---
 
 {
 	image && (
-		<img
+		<Image
 			class:list={['author-avatar', `author-avatar--${size}`, rounded && 'author-avatar--rounded', className]}
-			src={image.src}
-			width={image.width}
-			height={image.height}
-			alt={`${name}'s avatar`}
+			src={image}
+			width={px}
+			height={px}
+			densities={[1, 2]}
+			alt={decorative ? '' : `${name}'s avatar`}
 		/>
 	)
 }

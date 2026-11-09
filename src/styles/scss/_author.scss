@@ -16,6 +16,11 @@
 	border-radius: 50%;
 }
 
+.author-avatar--xs {
+	width: 2.5rem;
+	height: 2.5rem;
+}
+
 .author-avatar--sm {
 	width: 3rem;
 	height: 3rem;
@@ -75,7 +80,7 @@
 
 .author-card {
 	padding: 1.25rem;
-	border: 1px solid rgba($color-primary, 0.15);
+	border: 1px solid fade($color-primary, 0.15);
 	background-color: $color-white;
 }
 
@@ -150,13 +155,13 @@
 .post-authors__divider {
 	margin-bottom: 2rem;
 	border: 0;
-	border-top: 1px solid rgba($color-primary, 0.15);
+	border-top: 1px solid fade($color-primary, 0.15);
 }
 
 .post-authors .author-bio + .author-bio {
 	margin-top: 1.5rem;
 	padding-top: 1.5rem;
-	border-top: 1px solid rgba($color-primary, 0.1);
+	border-top: 1px solid fade($color-primary, 0.1);
 }
 
 .post-authors .author-bio__name {

@@ -4,16 +4,25 @@ import { getCategorySlug } from '../../lib/categories';
 interface Props {
 	category: string;
 	linked?: boolean;
+	count?: number;
+	current?: boolean;
 }
 
-const { category, linked = true } = Astro.props;
+const { category, linked = true, count, current = false } = Astro.props;
 const slug = getCategorySlug(category);
 ---
 
 {
 	linked ? (
-        <a class="category-badge" href={`/blog/category/${slug}/`}>
+		<a class="category-badge" href={`/blog/category/${slug}/`} aria-current={current ? 'page' : undefined}>
 			{category}
+			{count !== undefined && (
+				<span class="category-badge__count">
+					<span class="visually-hidden">, </span>
+					{count}
+					<span class="visually-hidden">{count === 1 ? ' post' : ' posts'}</span>
+				</span>
+			)}
 		</a>
 	) : (
 		<span class="category-badge">{category}</span>

@@ -2,19 +2,75 @@
 import { NAV_LINKS } from '../../lib/site';
 
 const currentPath = Astro.url.pathname;
+
+function getCurrent(href: string): 'page' | 'true' | undefined {
+	if (currentPath === href) return 'page';
+	if (href !== '/' && currentPath.startsWith(href)) return 'true';
+	return undefined;
+}
 ---
 
-<nav class="site-nav" aria-label="Main navigation">
-	{
-		NAV_LINKS.map(({ href, label }) => {
-			const isActive =
-				href === '/' ? currentPath === '/' : currentPath === href || currentPath.startsWith(href);
-
-			return (
-				<a class:list={['site-nav__link', isActive && 'site-nav__link--active']} href={href}>
-					{label}
-				</a>
-			);
-		})
-	}
+<nav class="site-nav" aria-label="Main navigation" data-site-nav>
+	<button
+		class="site-nav__toggle"
+		type="button"
+		aria-expanded="false"
+		aria-controls="site-nav-list"
+		data-site-nav-toggle
+	>
+		<span class="visually-hidden">Menu</span>
+		<svg
+			viewBox="0 0 24 24"
+			width="22"
+			height="22"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="square"
+			aria-hidden="true"
+		>
+			<path class="site-nav__toggle-open" d="M3 6h18M3 12h18M3 18h18"></path>
+			<path class="site-nav__toggle-close" d="M5 5l14 14M19 5L5 19"></path>
+		</svg>
+	</button>
+	<ul class="site-nav__list" id="site-nav-list">
+		{
+			NAV_LINKS.map(({ href, label }) => (
+				<li>
+					<a class="site-nav__link" href={href} aria-current={getCurrent(href)}>
+						{label}
+					</a>
+				</li>
+			))
+		}
+	</ul>
 </nav>
+
+<script>
+	const nav = document.querySelector<HTMLElement>('[data-site-nav]');
+	const toggle = nav?.querySelector<HTMLButtonElement>('[data-site-nav-toggle]');
+
+	if (nav && toggle) {
+		nav.classList.add('site-nav--enhanced');
+
+		const setOpen = (open: boolean) => {
+			nav.classList.toggle('site-nav--open', open);
+			toggle.setAttribute('aria-expanded', String(open));
+		};
+
+		toggle.addEventListener('click', () => {
+			setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+		});
+
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+				setOpen(false);
+				toggle.focus();
+			}
+		});
+
+		document.addEventListener('click', (event) => {
+			if (!nav.contains(event.target as Node)) setOpen(false);
+		});
+	}
+</script>

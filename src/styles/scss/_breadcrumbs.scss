@@ -21,7 +21,7 @@
 
 	&:not(:last-child)::after {
 		content: '/';
-		color: rgba($color-primary, 0.45);
+		color: fade($color-primary, 0.45);
 	}
 }
 
@@ -36,5 +36,5 @@
 }
 
 .breadcrumbs__current {
-	color: rgba($color-primary, 0.75);
+	color: fade($color-primary, 0.75);
 }

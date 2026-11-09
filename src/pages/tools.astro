@@ -1,5 +1,5 @@
 ---
-import ToolsLayout from '../components/layout/ToolsLayout.astro';
+import PageLayout from '../components/layout/PageLayout.astro';
 import ToolsCard from '../components/tools/ToolsCard.astro';
 import ToolsJumpNav from '../components/tools/ToolsJumpNav.astro';
 import ToolsSidebar from '../components/tools/ToolsSidebar.astro';
@@ -11,15 +11,15 @@ const toolsByCategory = groupToolsByCategory(tools);
 const subcategories = getAllSubcategories().filter((subcategory) => toolsByCategory.has(subcategory.id));
 ---
 
-<ToolsLayout
+<PageLayout
 	seo={{
 		title: 'Tools',
 		description: 'A curated list of useful mini tools to boost your productivity.',
-        canonicalPath: '/tools/',
+		canonicalPath: '/tools/',
 	}}
+	sidebarLabel="Tool categories"
+	hideSidebarOnMobile
 >
-	<ToolsSidebar slot="sidebar" toolsByCategory={toolsByCategory} />
-
 	<section class="page-section tools-page">
 		<h1 class="page-section__title">Tools</h1>
 		<p class="page-section__description">A curated list of useful mini tools to boost your productivity.</p>
@@ -53,7 +53,9 @@ const subcategories = getAllSubcategories().filter((subcategory) => toolsByCateg
 			})}
 		</div>
 	</section>
-</ToolsLayout>
+
+	<ToolsSidebar slot="sidebar" toolsByCategory={toolsByCategory} />
+</PageLayout>
 
 <script>
 	const SCROLL_OFFSET = 16;

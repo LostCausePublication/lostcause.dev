@@ -18,6 +18,7 @@ export const SITE = {
 	],
 	url: 'https://lostcause.dev',
 	themeColor: '#f9f7f2',
+	themeColorDark: '#151415',
 	githubUrl: 'https://github.com/LostCausePublication',
 	twitterUrl: 'https://x.com/lostcausedotdev',
 } as const;

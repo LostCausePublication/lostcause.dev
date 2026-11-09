@@ -3,6 +3,7 @@ import path from 'node:path';
 import PostLayout from '../../components/layout/PostLayout.astro';
 import PostHeader from '../../components/blog/PostHeader.astro';
 import PostAuthorFooter from '../../components/blog/PostAuthorFooter.astro';
+import PostComments from '../../components/blog/PostComments.astro';
 import { getCollection, render } from 'astro:content';
 import { getAuthorsBySlugs } from '../../lib/authors';
 import { getPostSlug } from '../../lib/blog';
@@ -36,6 +37,7 @@ const ogImageUrl = getPostOgImageUrl(ogImagePath);
 		title: post.data.title,
 		description: post.data.description,
         canonicalPath: `/blog/${slug}/`,
+		markdownPath: `/blog/${slug}/index.md`,
 		image: ogImageUrl,
 		imageAlt: post.data.ogImageAlt ?? post.data.title,
 		type: 'article',
@@ -57,5 +59,6 @@ const ogImageUrl = getPostOgImageUrl(ogImagePath);
 			<Content />
 		</div>
 		<PostAuthorFooter authorSlugs={post.data.authors} />
+		<PostComments term={`/blog/${slug}/`} />
 	</article>
 </PostLayout>

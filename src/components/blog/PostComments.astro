@@ -1,0 +1,29 @@
+---
+interface Props {
+	term: string;
+}
+
+const { term } = Astro.props;
+---
+
+<section class="post-comments" aria-label="Comments">
+	<h2 class="post-comments__title">Comments</h2>
+	<script
+		is:inline
+		src="https://giscus.app/client.js"
+		data-repo="LostCausePublication/lostcause.dev"
+		data-repo-id="R_kgDOSx8KhA"
+		data-category="Blog Comments"
+		data-category-id="DIC_kwDOSx8KhM4DKdBv"
+		data-mapping="specific"
+		data-strict="1"
+		data-term={term}
+		data-reactions-enabled="1"
+		data-emit-metadata="0"
+		data-input-position="bottom"
+		data-theme="light"
+		data-lang="en"
+		data-loading="lazy"
+		crossorigin="anonymous"
+		async></script>
+</section>

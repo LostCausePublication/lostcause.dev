@@ -1,100 +1,77 @@
 ---
-import avatar from '../../assets/avatar.png';
-import SocialLinks from './SocialLinks.astro';
-import { SITE, TAGLINES } from '../../lib/site';
+import { getCategoryStats } from '../../lib/categories';
+import { getLatestPosts, getPublishedPosts } from '../../lib/blog';
+import { getGlossaryTerms } from '../../lib/glossary';
+import { getAllTools } from '../../lib/tools';
+
+const [posts, latestPosts, tools, categories] = await Promise.all([
+	getPublishedPosts(),
+	getLatestPosts(3),
+	getAllTools(),
+	getCategoryStats(),
+]);
+
+const glossaryCount = getGlossaryTerms().length;
+const termLabel = glossaryCount === 1 ? 'term' : 'terms';
+
+const stats = [
+	{ label: 'posts', value: String(posts.length) },
+	{ label: 'glossary', value: `${glossaryCount} ${termLabel}` },
+	{ label: 'tools', value: String(tools.length) },
+	{ label: 'topics', value: String(categories.length) },
+];
 ---
 
-<div class="hero">
-	<img
-		class="avatar"
-		src={avatar.src}
-		width={avatar.width}
-		height={avatar.height}
-		alt="Lost Cause Publication Avatar"
-	/>
-
-	<h1 class="title">
-		<span class="title-primary">LOSTCAUSE.</span><span class="title-accent">DEV</span>
-	</h1>
-
-	<p class="subtitle">
-		<span class="subtitle-text" data-taglines={JSON.stringify(TAGLINES)} aria-live="polite"
-			>{SITE.tagline}</span
-		><span class="subtitle-caret" aria-hidden="true"></span>
-	</p>
-
-	<p class="description">
-		A not-so-serious <span class="description-highlight">coding publication</span> about the JavaScript/TypeScript
-		ecosystem, open-source projects and CLI tools.
-	</p>
-
-	<SocialLinks />
-</div>
-
-<script>
-	const el = document.querySelector<HTMLElement>('.subtitle-text[data-taglines]');
-	const raw = el?.dataset.taglines;
-
-	if (el && raw) {
-		let taglines: string[] = [];
-		try {
-			taglines = JSON.parse(raw);
-		} catch {
-			taglines = [el.textContent ?? ''];
-		}
-
-		if (taglines.length > 0) {
-			const TYPE_SPEED = 35;
-			const DELETE_SPEED = 30;
-			const HOLD_TIME = 10000;
-			const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-			const pickNext = (current: number) => {
-				if (taglines.length === 1) return current;
-				let next = current;
-				while (next === current) {
-					next = Math.floor(Math.random() * taglines.length);
+<section class="hero" aria-labelledby="hero-heading">
+	<div class="hero__copy">
+		<p class="hero__eyebrow">JavaScript / TypeScript / Open-source / CLI</p>
+		<h1 id="hero-heading" class="hero__title">
+			A <span class="hero__accent">not-so-serious</span> coding publication.
+		</h1>
+		<p class="hero__lede">
+			We talk about the JavaScript/TypeScript ecosystem, <span class="hero__nowrap">open-source</span> projects and CLI tools.
+		</p>
+	</div>
+	<div class="hero__terminal" role="region" aria-label="Site stats">
+		<div class="hero__terminal-bar" aria-hidden="true">
+			<span>~/LOSTCAUSE</span>
+			<span>ssh</span>
+		</div>
+		<div class="hero__terminal-body">
+			<p class="hero__cmd"><span class="hero__prompt" aria-hidden="true">$</span> lostcause --stats</p>
+			<dl class="hero__stats">
+				{
+					stats.map((stat) => (
+						<div class="hero__stat">
+							<dt>{stat.label}</dt>
+							<dd>{stat.value}</dd>
+						</div>
+					))
 				}
-				return next;
-			};
-
-			let index = Math.floor(Math.random() * taglines.length);
-
-			if (prefersReduced) {
-				el.textContent = taglines[index];
-				setInterval(() => {
-					index = pickNext(index);
-					el.textContent = taglines[index];
-				}, HOLD_TIME);
-			} else {
-				let text = taglines[index];
-				let char = 0;
-				el.textContent = '';
-
-				const type = () => {
-					char += 1;
-					el.textContent = text.slice(0, char);
-					if (char < text.length) {
-						setTimeout(type, TYPE_SPEED);
-					} else {
-						setTimeout(erase, HOLD_TIME);
-					}
-				};
-
-				const erase = () => {
-					char -= 1;
-					el.textContent = text.slice(0, char);
-					if (char > 0) {
-						setTimeout(erase, DELETE_SPEED);
-					} else {
-						index = pickNext(index);
-						text = taglines[index];
-						setTimeout(type, TYPE_SPEED);
-					}
-				};
-
-				type();
+			</dl>
+			{
+				latestPosts.length > 0 && (
+					<>
+						<p class="hero__cmd">
+							<span class="hero__prompt" aria-hidden="true">$</span> lostcause --latest
+						</p>
+						<ul class="hero__latest">
+							{latestPosts.map((post) => (
+								<li>
+									<span class="hero__prompt" aria-hidden="true">
+										&gt;
+									</span>
+									{post.data.title}
+								</li>
+							))}
+						</ul>
+					</>
+				)
 			}
-		}
-	}
-</script>
+			<p class="hero__cmd hero__cmd--idle" aria-hidden="true">
+				<span class="hero__prompt">$</span>
+				<span class="hero__cursor"></span>
+			</p>
+		</div>
+	</div>
+</section>
