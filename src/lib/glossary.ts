@@ -26,6 +26,7 @@ const GLOSSARY_CATEGORIES: { id: GlossaryCategoryId; label: string }[] = [
 	{ id: 'sales', label: 'Sales' },
 	{ id: 'marketing', label: 'Marketing' },
 	{ id: 'events', label: 'Events' },
+	{ id: 'email', label: 'Email' },
 ];
 
 export type GlossaryCategoryStat = {
