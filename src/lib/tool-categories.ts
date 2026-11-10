@@ -49,6 +49,12 @@ export const TOOL_CATEGORY_GROUPS: ToolCategoryGroup[] = [
 				description: 'Drafting, editing, and revision tools for written content.',
 				icon: 'assets/tools/categories/writing.svg',
 			},
+			{
+				id: 'emails',
+				label: 'Emails',
+				description: 'Convert mailbox exports and work with email.',
+				icon: 'assets/tools/categories/emails.svg',
+			},
 		],
 	},
 ];
