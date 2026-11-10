@@ -1,9 +1,20 @@
 ---
 import { Font } from 'astro:assets';
+import type { BreadcrumbItem } from '../../lib/breadcrumbs';
+import { getDefaultOgImage } from '../../lib/og-images';
 import { SITE } from '../../lib/site';
-import { getCanonicalUrl, getDefaultOgImageUrl, getPageTitle, type SeoData } from '../../lib/seo';
+import {
+	blogPostingJsonLd,
+	breadcrumbListJsonLd,
+	getCanonicalUrl,
+	getPageTitle,
+	webPageJsonLd,
+	type SeoData,
+} from '../../lib/seo';
 
-interface Props extends SeoData {}
+interface Props extends SeoData {
+	breadcrumbs?: BreadcrumbItem[];
+}
 
 const {
 	title,
@@ -11,6 +22,8 @@ const {
 	canonicalPath,
 	image,
 	imageAlt,
+	imageWidth,
+	imageHeight,
 	type = 'website',
 	publishedTime,
 	modifiedTime,
@@ -20,46 +33,45 @@ const {
 	noIndex = false,
 	jsonLd: jsonLdOverride,
 	markdownPath,
+	breadcrumbs,
 } = Astro.props;
 
 const pathname = canonicalPath ?? Astro.url.pathname;
 const canonicalUrl = getCanonicalUrl(pathname);
 const pageTitle = getPageTitle(title);
-const ogImage = image ?? getDefaultOgImageUrl();
+const fallbackImage = getDefaultOgImage();
+const ogImage = image ?? fallbackImage.url;
+const ogImageWidth = imageWidth ?? fallbackImage.width;
+const ogImageHeight = imageHeight ?? fallbackImage.height;
 const ogImageAltText = imageAlt ?? description;
 const robots = noIndex ? 'noindex, nofollow' : 'index, follow';
 const twitterHandle = SITE.twitterUrl.replace('https://x.com/', '@');
 const metaKeywords = [...(keywords ?? SITE.keywords), ...categories];
 const keywordsContent = [...new Set(metaKeywords)].join(', ');
 
-const jsonLd = jsonLdOverride ??
+const jsonLd =
+	jsonLdOverride ??
 	(type === 'article'
-		? {
-				'@context': 'https://schema.org',
-				'@type': 'BlogPosting',
-				headline: title,
+		? blogPostingJsonLd({
+				title,
 				description,
+				url: canonicalUrl,
 				image: ogImage,
-				datePublished: publishedTime?.toISOString(),
-				dateModified: (modifiedTime ?? publishedTime)?.toISOString(),
-				author: authors.map((name) => ({ '@type': 'Person', name })),
-				publisher: {
-					'@type': 'Organization',
-					name: SITE.name,
-					url: SITE.url,
-				},
-				mainEntityOfPage: canonicalUrl,
-				articleSection: categories,
-				keywords: categories.join(', '),
-			}
-		: {
-				'@context': 'https://schema.org',
-				'@type': 'WebSite',
-				name: SITE.name,
-				description: SITE.description,
-				url: SITE.url,
-				keywords: keywordsContent,
-			});
+				imageWidth: ogImageWidth,
+				imageHeight: ogImageHeight,
+				publishedTime,
+				modifiedTime,
+				authors,
+				categories,
+			})
+		: webPageJsonLd({
+				name: title,
+				description,
+				url: canonicalUrl,
+			}));
+
+const breadcrumbJsonLd =
+	breadcrumbs && breadcrumbs.length > 0 ? breadcrumbListJsonLd(breadcrumbs, canonicalUrl) : undefined;
 ---
 
 <meta charset="utf-8" />
@@ -90,6 +102,8 @@ const jsonLd = jsonLdOverride ??
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:image" content={ogImage} />
 <meta property="og:image:alt" content={ogImageAltText} />
+<meta property="og:image:width" content={ogImageWidth} />
+<meta property="og:image:height" content={ogImageHeight} />
 <meta property="og:locale" content="en_US" />
 
 <meta name="twitter:card" content="summary_large_image" />
@@ -111,7 +125,7 @@ const jsonLd = jsonLdOverride ??
 }
 {
 	type === 'article' &&
-		authors.map((author) => <meta property="article:author" content={author} />)
+		authors.map((author) => <meta property="article:author" content={author.url} />)
 }
 {
 	type === 'article' &&
@@ -123,6 +137,11 @@ const jsonLd = jsonLdOverride ??
 }
 
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+{
+	breadcrumbJsonLd && (
+		<script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+	)
+}
 
 <link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />

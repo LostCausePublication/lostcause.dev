@@ -43,7 +43,8 @@ export type GlossaryCategoryId =
 	| 'ai'
 	| 'sales'
 	| 'marketing'
-	| 'events';
+	| 'events'
+	| 'email';
 
 export type GlossaryTerm = {
 	id: string;
@@ -602,4 +603,11 @@ export const glossaryTerms: GlossaryTerm[] = [
  categories: ['marketing'],
  related: ['https://en.wikipedia.org/wiki/Community_manager'],
  },
+ {
+	id: 'mbox-format',
+	term: 'MBOX Format',
+	explanation: 'MBOX is a simple, widely supported file format for storing email messages. Every message in a mailbox is saved one after another in a single plain-text file, usually ending in .mbox. Major email platforms use it to export and back up emails, such as Gmail, Outlook, and Apple Mail.',
+	categories: ['email'],
+	related: ['https://en.wikipedia.org/wiki/Mbox'],
+ }
 ];

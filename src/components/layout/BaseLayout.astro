@@ -2,21 +2,23 @@
 import SeoHead from '../shared/SeoHead.astro';
 import ThemeScript from '../shared/ThemeScript.astro';
 import Analytics from '../shared/Analytics.astro';
+import type { BreadcrumbItem } from '../../lib/breadcrumbs';
 import type { SeoData } from '../../lib/seo';
 import '../../styles/scss/main.scss';
 
 interface Props {
 	seo: SeoData;
+	breadcrumbs?: BreadcrumbItem[];
 }
 
-const { seo } = Astro.props;
+const { seo, breadcrumbs } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
 		<ThemeScript />
-		<SeoHead {...seo} />
+		<SeoHead {...seo} breadcrumbs={breadcrumbs} />
 	</head>
 	<body>
 		<slot />

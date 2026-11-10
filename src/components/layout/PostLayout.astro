@@ -4,6 +4,7 @@ import SiteHeader from '../shared/SiteHeader.astro';
 import Footer from '../shared/Footer.astro';
 import Breadcrumbs from '../shared/Breadcrumbs.astro';
 import TableOfContents from '../blog/TableOfContents.astro';
+import ImageLightbox from '../blog/ImageLightbox.astro';
 import type { TocHeading } from '../blog/TableOfContents.astro';
 import type { BreadcrumbItem } from '../../lib/breadcrumbs';
 import type { SeoData } from '../../lib/seo';
@@ -19,7 +20,7 @@ const tocHeadings = headings.filter((heading) => heading.depth >= 2 && heading.d
 const hasToc = tocHeadings.length > 0;
 ---
 
-<BaseLayout seo={seo}>
+<BaseLayout seo={seo} breadcrumbs={breadcrumbs}>
 	<SiteHeader />
 	<main id="main" tabindex="-1" class:list={['page', 'page--post', hasToc && 'page--post-with-toc']}>
 		<div class:list={['post-layout', hasToc && 'post-layout--with-toc']}>
@@ -31,4 +32,5 @@ const hasToc = tocHeadings.length > 0;
 		</div>
 	</main>
 	<Footer />
+	<ImageLightbox />
 </BaseLayout>

@@ -18,11 +18,12 @@ export function getStaticPaths() {
 const { category } = Astro.props;
 const terms = getTermsByCategory(category.id);
 const description = categoryDescription(category.label);
+const title = `${category.label} glossary`;
 ---
 
 <GlossaryBrowser
 	seo={{
-		title: category.label,
+		title,
 		description,
 		canonicalPath: glossaryCategoryPath(category.id),
 		keywords: [category.label, 'glossary', 'tech terms'],

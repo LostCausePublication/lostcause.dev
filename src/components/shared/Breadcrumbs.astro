@@ -1,18 +1,19 @@
 ---
-import type { BreadcrumbItem } from '../../lib/breadcrumbs';
+import { breadcrumbTrail, type BreadcrumbItem } from '../../lib/breadcrumbs';
 
 interface Props {
 	items: BreadcrumbItem[];
 }
 
 const { items } = Astro.props;
+const trail = breadcrumbTrail(items);
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
 	<ol class="breadcrumbs__list">
 		{
-			items.map((item, index) => {
-				const isLast = index === items.length - 1;
+			trail.map((item, index) => {
+				const isLast = index === trail.length - 1;
 
 				return (
 					<li class="breadcrumbs__item">

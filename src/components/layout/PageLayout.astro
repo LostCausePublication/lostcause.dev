@@ -20,7 +20,7 @@ const hasSidebar = Astro.slots.has('sidebar');
 const hasHero = Astro.slots.has('hero');
 ---
 
-<BaseLayout seo={seo}>
+<BaseLayout seo={seo} breadcrumbs={breadcrumbs}>
 	<SiteHeader />
 	<main id="main" tabindex="-1" class:list={['page', hasHero && 'page--has-hero']}>
 		<div class="page-content">

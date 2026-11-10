@@ -7,3 +7,19 @@
 	height: auto;
 	margin-block: 1.5rem;
 }
+
+.prose img.lightbox-trigger {
+	cursor: zoom-in;
+	transition: opacity 160ms ease;
+
+	&:hover,
+	&:focus-visible {
+		opacity: 0.8;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.prose img.lightbox-trigger {
+		transition: none;
+	}
+}

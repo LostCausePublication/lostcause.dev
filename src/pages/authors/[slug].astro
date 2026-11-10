@@ -2,8 +2,12 @@
 import PageLayout from '../../components/layout/PageLayout.astro';
 import AuthorHeader from '../../components/author/AuthorHeader.astro';
 import PostCard from '../../components/blog/PostCard.astro';
+import { getAuthorAvatar } from '../../lib/avatars';
 import { getAllAuthors, getAuthorSlug } from '../../lib/authors';
 import { getPostsByAuthor } from '../../lib/blog';
+import { authorMetaDescription, getCanonicalUrl, profilePageJsonLd, stripEmoji } from '../../lib/seo';
+import { getAuthorSocialLinks } from '../../lib/social';
+import { SITE } from '../../lib/site';
 
 export async function getStaticPaths() {
 	const authors = await getAllAuthors();
@@ -17,14 +21,32 @@ export async function getStaticPaths() {
 const { author } = Astro.props;
 const slug = getAuthorSlug(author);
 const posts = await getPostsByAuthor(slug);
+const canonicalPath = `/authors/${slug}/`;
+const profileUrl = getCanonicalUrl(canonicalPath);
+const description = authorMetaDescription(author.data.name, author.data.bio);
+const avatar = author.data.avatar ? getAuthorAvatar(author.data.avatar) : null;
+const sameAs = getAuthorSocialLinks(author.data).map((link) => {
+	const url = new URL(link.url);
+	url.searchParams.delete('ref');
+	return url.href;
+});
 ---
 
 <PageLayout
 	seo={{
 		title: author.data.name,
-		description: author.data.bio,
-        canonicalPath: `/authors/${slug}/`,
+		description,
+		canonicalPath,
+		jsonLd: profilePageJsonLd({
+			name: author.data.name,
+			description,
+			bio: stripEmoji(author.data.bio),
+			url: profileUrl,
+			image: avatar ? new URL(avatar.src, SITE.url).href : undefined,
+			sameAs,
+		}),
 	}}
+	breadcrumbs={[{ label: 'Authors', href: '/authors/' }, { label: author.data.name }]}
 >
 	<AuthorHeader author={author} />
 

@@ -1,0 +1,99 @@
+@use 'variables' as *;
+
+.lightbox {
+	position: fixed;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	max-width: none;
+	max-height: none;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	overflow: hidden;
+	background: rgb(14 13 14 / 94%);
+	color: #f9f7f2;
+	color-scheme: dark;
+
+	&::backdrop {
+		background: rgb(14 13 14 / 94%);
+	}
+
+	&:focus {
+		outline: none;
+	}
+}
+
+.lightbox__stage {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	overflow: hidden;
+	touch-action: none;
+	cursor: default;
+
+	&[data-zoomed='true'] {
+		cursor: grab;
+	}
+
+	&[data-panning='true'] {
+		cursor: grabbing;
+	}
+}
+
+.lightbox__image {
+	display: block;
+	width: auto;
+	max-width: calc(100% - 2rem);
+	height: auto;
+	max-height: calc(100% - 8.5rem);
+	object-fit: contain;
+	transform-origin: center center;
+	user-select: none;
+	-webkit-user-drag: none;
+}
+
+.lightbox__close {
+	position: absolute;
+	top: max(0.75rem, env(safe-area-inset-top));
+	right: max(0.75rem, env(safe-area-inset-right));
+	z-index: 2;
+}
+
+.lightbox__controls {
+	position: absolute;
+	right: 0;
+	bottom: max(1rem, env(safe-area-inset-bottom));
+	left: 0;
+	z-index: 2;
+	display: flex;
+	justify-content: center;
+	gap: 0.5rem;
+	pointer-events: none;
+}
+
+.lightbox__button {
+	@include tap-target;
+	padding: 0;
+	border: 1px solid rgb(249 247 242 / 35%);
+	background: rgb(14 13 14 / 80%);
+	color: #f9f7f2;
+	font-family: $font-mono;
+	font-size: 1.125rem;
+	line-height: 1;
+	cursor: pointer;
+	pointer-events: auto;
+
+	&:hover:not(:disabled),
+	&:focus-visible {
+		border-color: $color-accent;
+		background-color: $color-accent;
+		color: $color-on-accent;
+	}
+
+	&:disabled {
+		opacity: 0.35;
+		cursor: default;
+	}
+}

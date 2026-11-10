@@ -5,10 +5,11 @@ import PostHeader from '../../components/blog/PostHeader.astro';
 import PostAuthorFooter from '../../components/blog/PostAuthorFooter.astro';
 import PostComments from '../../components/blog/PostComments.astro';
 import { getCollection, render } from 'astro:content';
-import { getAuthorsBySlugs } from '../../lib/authors';
+import { getAuthorSlug, getAuthorsBySlugs } from '../../lib/authors';
 import { getPostSlug } from '../../lib/blog';
 import { getCategorySlug } from '../../lib/categories';
-import { getPostOgImageUrl } from '../../lib/og-images';
+import { getPostOgImage } from '../../lib/og-images';
+import { getCanonicalUrl } from '../../lib/seo';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -29,21 +30,26 @@ const primaryCategorySlug = getCategorySlug(primaryCategory);
 const ogImageName = post.data.ogImage || 'ogimage.png';
 const postFolderPath = path.dirname(post.filePath || '');
 const ogImagePath = path.join(postFolderPath, ogImageName);
-const ogImageUrl = getPostOgImageUrl(ogImagePath);
+const ogImage = getPostOgImage(ogImagePath);
 ---
 
 <PostLayout
 	seo={{
 		title: post.data.title,
 		description: post.data.description,
-        canonicalPath: `/blog/${slug}/`,
+		canonicalPath: `/blog/${slug}/`,
 		markdownPath: `/blog/${slug}/index.md`,
-		image: ogImageUrl,
+		image: ogImage.url,
+		imageWidth: ogImage.width,
+		imageHeight: ogImage.height,
 		imageAlt: post.data.ogImageAlt ?? post.data.title,
 		type: 'article',
 		publishedTime: post.data.pubDate,
 		modifiedTime: post.data.updatedDate,
-		authors: authors.map((author) => author.data.name),
+		authors: authors.map((author) => ({
+			name: author.data.name,
+			url: getCanonicalUrl(`/authors/${getAuthorSlug(author)}/`),
+		})),
 		categories: post.data.categories,
 	}}
 	headings={headings}

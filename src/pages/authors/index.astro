@@ -1,17 +1,31 @@
 ---
 import PageLayout from '../../components/layout/PageLayout.astro';
 import AuthorCard from '../../components/author/AuthorCard.astro';
-import { getAllAuthors } from '../../lib/authors';
+import { getAllAuthors, getAuthorSlug } from '../../lib/authors';
+import { collectionPageJsonLd, getCanonicalUrl } from '../../lib/seo';
 
 const authors = await getAllAuthors();
+const title = 'Authors';
+const description = 'The people writing for Lost Cause Publication.';
+const canonicalPath = '/authors/';
 ---
 
 <PageLayout
 	seo={{
-		title: 'Authors',
-		description: 'The people writing for Lost Cause Publication.',
-        canonicalPath: '/authors/',
+		title,
+		description,
+		canonicalPath,
+		jsonLd: collectionPageJsonLd({
+			name: title,
+			description,
+			url: getCanonicalUrl(canonicalPath),
+			items: authors.map((author) => ({
+				name: author.data.name,
+				url: getCanonicalUrl(`/authors/${getAuthorSlug(author)}/`),
+			})),
+		}),
 	}}
+	breadcrumbs={[{ label: 'Authors' }]}
 >
 	<section class="page-section">
 		<h1 class="page-section__title">Authors</h1>

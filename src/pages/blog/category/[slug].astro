@@ -2,7 +2,9 @@
 import PageLayout from '../../../components/layout/PageLayout.astro';
 import PostCard from '../../../components/blog/PostCard.astro';
 import BlogSidebar from '../../../components/sidebar/BlogSidebar.astro';
+import { getPostSlug } from '../../../lib/blog';
 import { getCategoryStats, getPostsByCategory } from '../../../lib/categories';
+import { collectionPageJsonLd, getCanonicalUrl } from '../../../lib/seo';
 export async function getStaticPaths() {
 	const categories = await getCategoryStats();
 
@@ -14,13 +16,26 @@ export async function getStaticPaths() {
 
 const { category } = Astro.props;
 const posts = await getPostsByCategory(category.slug);
+const title = `${category.name} posts`;
+const description = `All posts in the ${category.name} category on Lost Cause Publication.`;
+const canonicalPath = `/blog/category/${category.slug}/`;
 ---
 
 <PageLayout
 	seo={{
-		title: category.name,
-		description: `All posts in the ${category.name} category on Lost Cause Publication.`,
-        canonicalPath: `/blog/category/${category.slug}/`,
+		title,
+		description,
+		canonicalPath,
+		jsonLd: collectionPageJsonLd({
+			name: title,
+			description,
+			url: getCanonicalUrl(canonicalPath),
+			items: posts.map((post) => ({
+				name: post.data.title,
+				description: post.data.description,
+				url: getCanonicalUrl(`/blog/${getPostSlug(post)}/`),
+			})),
+		}),
 	}}
 	breadcrumbs={[
         { label: 'Blog', href: '/blog/' },

@@ -5,18 +5,33 @@ import ToolsJumpNav from '../components/tools/ToolsJumpNav.astro';
 import ToolsSidebar from '../components/tools/ToolsSidebar.astro';
 import { getAllSubcategories } from '../lib/tool-categories';
 import { getAllTools, groupToolsByCategory } from '../lib/tools';
+import { collectionPageJsonLd, getCanonicalUrl } from '../lib/seo';
 
 const tools = await getAllTools();
 const toolsByCategory = groupToolsByCategory(tools);
 const subcategories = getAllSubcategories().filter((subcategory) => toolsByCategory.has(subcategory.id));
+const title = 'Tools';
+const description = 'A curated list of useful mini tools to boost your productivity.';
+const canonicalPath = '/tools/';
 ---
 
 <PageLayout
 	seo={{
-		title: 'Tools',
-		description: 'A curated list of useful mini tools to boost your productivity.',
-		canonicalPath: '/tools/',
+		title,
+		description,
+		canonicalPath,
+		jsonLd: collectionPageJsonLd({
+			name: title,
+			description,
+			url: getCanonicalUrl(canonicalPath),
+			items: tools.map((tool) => ({
+				name: tool.data.name,
+				description: tool.data.description,
+				url: tool.data.url,
+			})),
+		}),
 	}}
+	breadcrumbs={[{ label: 'Tools' }]}
 	sidebarLabel="Tool categories"
 	hideSidebarOnMobile
 >
