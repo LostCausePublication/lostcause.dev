@@ -1,0 +1,368 @@
+<dialog class="lightbox" id="image-lightbox" data-lightbox aria-label="Enlarged image">
+	<div class="lightbox__stage" data-lightbox-stage>
+		<img class="lightbox__image" data-lightbox-image alt="" draggable="false" />
+	</div>
+	<button type="button" class="lightbox__button lightbox__close" data-lightbox-close>
+		<span class="visually-hidden">Close</span>
+		<svg
+			viewBox="0 0 24 24"
+			width="20"
+			height="20"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="square"
+			aria-hidden="true"
+		>
+			<path d="M6 6l12 12M18 6L6 18"></path>
+		</svg>
+	</button>
+	<div class="lightbox__controls">
+		<button type="button" class="lightbox__button" data-lightbox-zoom="out" aria-label="Zoom out" disabled>−</button>
+		<button type="button" class="lightbox__button" data-lightbox-zoom="reset" aria-label="Reset zoom" disabled>1×</button>
+		<button type="button" class="lightbox__button" data-lightbox-zoom="in" aria-label="Zoom in">+</button>
+	</div>
+</dialog>
+
+<script>
+	const MIN_SCALE = 1;
+	const MAX_SCALE = 4;
+	const ZOOM_STEP = 1.25;
+	const WHEEL_SENSITIVITY = 0.0015;
+
+	const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox]');
+	const stage = dialog?.querySelector<HTMLElement>('[data-lightbox-stage]');
+	const lightboxImage = dialog?.querySelector<HTMLImageElement>('[data-lightbox-image]');
+	const closeButton = dialog?.querySelector<HTMLButtonElement>('[data-lightbox-close]');
+	const zoomInButton = dialog?.querySelector<HTMLButtonElement>('[data-lightbox-zoom="in"]');
+	const zoomOutButton = dialog?.querySelector<HTMLButtonElement>('[data-lightbox-zoom="out"]');
+	const resetButton = dialog?.querySelector<HTMLButtonElement>('[data-lightbox-zoom="reset"]');
+
+	if (dialog && stage && lightboxImage && closeButton && zoomInButton && zoomOutButton && resetButton) {
+		let scale = 1;
+		let translateX = 0;
+		let translateY = 0;
+		let opener: HTMLImageElement | null = null;
+		let previousOverflow = '';
+		let suppressClick = false;
+		let suppressTimer = 0;
+		let requestId = 0;
+
+		const armSuppressClick = () => {
+			suppressClick = true;
+			window.clearTimeout(suppressTimer);
+			suppressTimer = window.setTimeout(() => {
+				suppressClick = false;
+			}, 0);
+		};
+
+		const pointers = new Map<number, { x: number; y: number }>();
+		let drag: { id: number; x: number; y: number; tx: number; ty: number } | null = null;
+		let pinch: { distance: number; scale: number; tx: number; ty: number } | null = null;
+
+		const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+		const toAbsolute = (url: string) => {
+			try {
+				return new URL(url, window.location.href).href;
+			} catch {
+				return url;
+			}
+		};
+
+		const largestSrc = (image: HTMLImageElement) => {
+			const srcset = image.getAttribute('srcset');
+			if (!srcset) return image.currentSrc || image.src;
+
+			let bestUrl = '';
+			let bestScore = -1;
+
+			for (const candidate of srcset.split(',')) {
+				const trimmed = candidate.trim();
+				if (!trimmed) continue;
+
+				const splitAt = trimmed.lastIndexOf(' ');
+				const url = splitAt === -1 ? trimmed : trimmed.slice(0, splitAt);
+				const descriptor = splitAt === -1 ? '' : trimmed.slice(splitAt + 1);
+				let score = 1;
+
+				if (descriptor.endsWith('w')) score = Number.parseFloat(descriptor);
+				else if (descriptor.endsWith('x')) score = Number.parseFloat(descriptor) * 100000;
+
+				if (Number.isFinite(score) && score > bestScore) {
+					bestScore = score;
+					bestUrl = url;
+				}
+			}
+
+			return bestUrl || image.currentSrc || image.src;
+		};
+
+		const render = () => {
+			lightboxImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+			const zoomed = scale > MIN_SCALE + 0.001;
+			zoomInButton.disabled = scale >= MAX_SCALE - 0.001;
+			zoomOutButton.disabled = !zoomed;
+			resetButton.disabled = !zoomed && Math.abs(translateX) < 0.5 && Math.abs(translateY) < 0.5;
+			stage.dataset.zoomed = zoomed ? 'true' : 'false';
+		};
+
+		const clampPan = () => {
+			const maxX = Math.max(0, (lightboxImage.offsetWidth * scale - stage.clientWidth) / 2);
+			const maxY = Math.max(0, (lightboxImage.offsetHeight * scale - stage.clientHeight) / 2);
+			translateX = clamp(translateX, -maxX, maxX);
+			translateY = clamp(translateY, -maxY, maxY);
+		};
+
+		const setZoom = (
+			baseScale: number,
+			baseX: number,
+			baseY: number,
+			nextScale: number,
+			clientX: number,
+			clientY: number,
+		) => {
+			const rect = stage.getBoundingClientRect();
+			const originX = rect.left + rect.width / 2;
+			const originY = rect.top + rect.height / 2;
+			const next = clamp(nextScale, MIN_SCALE, MAX_SCALE);
+			const ratio = baseScale === 0 ? 1 : next / baseScale;
+			translateX = baseX * ratio + (clientX - originX) * (1 - ratio);
+			translateY = baseY * ratio + (clientY - originY) * (1 - ratio);
+			scale = next;
+			clampPan();
+			render();
+		};
+
+		const zoomAt = (nextScale: number, clientX: number, clientY: number) => {
+			setZoom(scale, translateX, translateY, nextScale, clientX, clientY);
+		};
+
+		const zoomBy = (factor: number) => {
+			const rect = stage.getBoundingClientRect();
+			zoomAt(scale * factor, rect.left + rect.width / 2, rect.top + rect.height / 2);
+		};
+
+		const resetZoom = () => {
+			scale = 1;
+			translateX = 0;
+			translateY = 0;
+			render();
+		};
+
+		const open = (source: HTMLImageElement) => {
+			const request = ++requestId;
+			opener = source;
+			resetZoom();
+			stage.dataset.panning = 'false';
+
+			const preview = source.currentSrc || source.src;
+			const full = largestSrc(source);
+			lightboxImage.alt = source.alt;
+			lightboxImage.src = preview;
+
+			if (toAbsolute(full) !== toAbsolute(preview)) {
+				const loader = new Image();
+				loader.onload = () => {
+					if (request !== requestId) return;
+					lightboxImage.src = loader.src;
+					clampPan();
+					render();
+				};
+				loader.src = full;
+			}
+
+			if (!dialog.open) {
+				previousOverflow = document.documentElement.style.overflow;
+				document.documentElement.style.overflow = 'hidden';
+				dialog.showModal();
+			}
+
+			closeButton.focus();
+		};
+
+		const endPointer = (event: PointerEvent) => {
+			pointers.delete(event.pointerId);
+			if (drag?.id === event.pointerId) drag = null;
+
+			if (pointers.size < 2) pinch = null;
+
+			if (pointers.size === 1 && scale > MIN_SCALE) {
+				const remaining = pointers.entries().next().value;
+				if (remaining) {
+					const [id, point] = remaining;
+					drag = { id, x: point.x, y: point.y, tx: translateX, ty: translateY };
+				}
+			}
+
+			if (pointers.size === 0) stage.dataset.panning = 'false';
+		};
+
+		document.querySelectorAll<HTMLImageElement>('.prose img').forEach((image) => {
+			image.classList.add('lightbox-trigger');
+			image.tabIndex = 0;
+			image.setAttribute('role', 'button');
+			image.setAttribute('aria-haspopup', 'dialog');
+			image.setAttribute('aria-controls', 'image-lightbox');
+
+			image.addEventListener('click', (event) => {
+				event.preventDefault();
+				open(image);
+			});
+
+			image.addEventListener('keydown', (event) => {
+				if (event.key !== 'Enter' && event.key !== ' ') return;
+				event.preventDefault();
+				open(image);
+			});
+		});
+
+		closeButton.addEventListener('click', () => {
+			dialog.close();
+		});
+
+		zoomInButton.addEventListener('click', () => {
+			zoomBy(ZOOM_STEP);
+		});
+
+		zoomOutButton.addEventListener('click', () => {
+			zoomBy(1 / ZOOM_STEP);
+		});
+
+		resetButton.addEventListener('click', () => {
+			resetZoom();
+		});
+
+		stage.addEventListener('click', (event) => {
+			if (suppressClick) {
+				suppressClick = false;
+				window.clearTimeout(suppressTimer);
+				return;
+			}
+
+			if (event.target === stage) dialog.close();
+		});
+
+		dialog.addEventListener('keydown', (event) => {
+			if (event.key !== 'Escape' || !dialog.open) return;
+			event.preventDefault();
+			dialog.close();
+		});
+
+		stage.addEventListener('dragstart', (event) => {
+			event.preventDefault();
+		});
+
+		stage.addEventListener('pointerdown', (event) => {
+			if (event.button !== 0) return;
+
+			pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+			try {
+				stage.setPointerCapture(event.pointerId);
+			} catch {
+				// Released or synthetic pointers cannot be captured. The gesture still tracks.
+			}
+
+			if (pointers.size >= 2) {
+				drag = null;
+				const points = [...pointers.values()];
+				const first = points[0];
+				const second = points[1];
+				if (!first || !second) return;
+				pinch = {
+					distance: Math.hypot(first.x - second.x, first.y - second.y),
+					scale,
+					tx: translateX,
+					ty: translateY,
+				};
+				armSuppressClick();
+				return;
+			}
+
+			if (scale > MIN_SCALE) {
+				drag = { id: event.pointerId, x: event.clientX, y: event.clientY, tx: translateX, ty: translateY };
+			}
+		});
+
+		stage.addEventListener('pointermove', (event) => {
+			if (!pointers.has(event.pointerId)) return;
+			pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+			if (pointers.size >= 2 && pinch && pinch.distance > 0) {
+				const points = [...pointers.values()];
+				const first = points[0];
+				const second = points[1];
+				if (!first || !second) return;
+				const distance = Math.hypot(first.x - second.x, first.y - second.y);
+				setZoom(
+					pinch.scale,
+					pinch.tx,
+					pinch.ty,
+					pinch.scale * (distance / pinch.distance),
+					(first.x + second.x) / 2,
+					(first.y + second.y) / 2,
+				);
+				armSuppressClick();
+				stage.dataset.panning = 'true';
+				return;
+			}
+
+			if (!drag || event.pointerId !== drag.id || scale <= MIN_SCALE) return;
+
+			const deltaX = event.clientX - drag.x;
+			const deltaY = event.clientY - drag.y;
+			if (Math.hypot(deltaX, deltaY) > 3) {
+				armSuppressClick();
+				stage.dataset.panning = 'true';
+			}
+
+			translateX = drag.tx + deltaX;
+			translateY = drag.ty + deltaY;
+			clampPan();
+			render();
+		});
+
+		stage.addEventListener('pointerup', endPointer);
+		stage.addEventListener('pointercancel', (event) => {
+			endPointer(event);
+			suppressClick = false;
+			window.clearTimeout(suppressTimer);
+		});
+
+		dialog.addEventListener(
+			'wheel',
+			(event) => {
+				if (!dialog.open) return;
+				event.preventDefault();
+
+				let delta = event.deltaY;
+				if (event.deltaMode === WheelEvent.DOM_DELTA_LINE) delta *= 16;
+				if (event.deltaMode === WheelEvent.DOM_DELTA_PAGE) delta *= stage.clientHeight;
+
+				zoomAt(scale * Math.exp(-delta * WHEEL_SENSITIVITY), event.clientX, event.clientY);
+			},
+			{ passive: false },
+		);
+
+		dialog.addEventListener('close', () => {
+			requestId += 1;
+			pointers.clear();
+			drag = null;
+			pinch = null;
+			stage.dataset.panning = 'false';
+			resetZoom();
+			document.documentElement.style.overflow = previousOverflow;
+			const returnTo = opener;
+			opener = null;
+			returnTo?.focus();
+		});
+
+		window.addEventListener('resize', () => {
+			if (!dialog.open) return;
+			clampPan();
+			render();
+		});
+
+		render();
+	}
+</script>
